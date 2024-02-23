@@ -1,5 +1,6 @@
 import simpy
 import random
+from collections import deque
 
 class Item:
     pass
@@ -23,7 +24,7 @@ class WorkStation:
         self.action = self.env.process(self.run())
         self.raw_materials : int = 25
         self.next = []
-        self.item = None
+        self.item = deque()
         self.fail_rate : float = fail_rate
         self.id = id
         self.name = _name
@@ -46,9 +47,9 @@ class WorkStation:
         start_time = self.env.now
         while True:
             if self.id == 1:
-                self.item = Item()
+                self.item.append(Item())
                 
-            if self.item is None:
+            if not self.item:
                 yield self.env.timeout(0.1) # Simply yield without a value to wait for an item
                 continue
                 
@@ -66,7 +67,7 @@ class WorkStation:
                     self.wait_time = self.env.now - start_time + self.wait_time
                     start_time = self.env.now
                     yield self.env.timeout(random.normalvariate(4))
-                    self.item.process(self.id)
+                    self.item[0].process(self.id)
                     self.raw_materials = self.raw_materials - 1
                     print(f"Station {self.id} made item at {self.env.now}")
                     self.work_time = self.work_time + (self.env.now - start_time)
@@ -78,27 +79,25 @@ class WorkStation:
                             passed_item = True
                         for station in self.next:
                             #TODO add a condition to check state of the station
-                            if station.id in self.item.stages_passed:
-                                print(self.id)
-                                print(f"{station.id} already processed here")
-                                print(self.next)
-                                continue
-                            if station.item:
-                                print(self.id)
-                                print(f"{station.id} has an item")
-                                print(self.next)
+                            if station.id in self.item[0].stages_passed:
+                                # print(self.id)
+                                # print(f"{station.id} already processed here")
+                                # print(self.next)
                                 continue
                             if not station.status:
-                                print(self.id)
-                                print(f"{station.id} Machine broken")
+                                # print(self.id)
+                                # print(f"{station.id} Machine broken")
+                                continue
+                            if station.id == 6 and len(self.item[0].stages_left) > 1:
+                                print(self.item[0].stages_left)
+                                print("Cannot advance to station 6")
                                 continue
                             passed_item = True
-                            station.item = self.item
-                            print("broken")
+                            station.item.append(self.item.popleft())
+                            print(f"Station {self.id} passed item to {station.id}")
                             break
                         print("waiting")
                         yield self.env.timeout(0.1)
-                    self.item = None
                 #TODO add an else clause to wait for raw materials
                 else:
                     self.status = True
