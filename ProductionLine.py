@@ -71,19 +71,24 @@ class WorkStation:
                 #TODO add an else clause to wait for raw materials
                 else:
                     print(f"Station {self.id} waiting for material at {self.env.now:.2f}")
-                    yield self.env.timeout(random.normalvariate(4)) #TEMP test for adding materials
-                    self.raw_materials = 25
-                    print(f"Station {self.id} reloaded at {self.env.now:.2f}")
-                    self.wait_time = self.env.now - start_time + self.wait_time
+                    with self.resource.request() as req:
+                        yield req
+                        print(f"Station {self.id} refilling at {self.env.now:.2f}")
+                        yield self.env.timeout(random.normalvariate(2))  # Refilling time
+                        self.raw_materials = 25
+                        print(f"Station {self.id} refilled at {self.env.now:.2f}")
             
             
 env = simpy.Environment()
 resource = simpy.Resource(env, 3)
 
-station2 = WorkStation(env, resource, 2, 0.20, [], "assembly")
+station3 = WorkStation(env, resource, 3, 0.15, [], "manufacturing")
+station2 = WorkStation(env, resource, 2, 0.10, [station3], "assembly")
 station1 = WorkStation(env, resource, 1, 0.20, [station2], "assembly")
 env.run(until=200)
 print(f"Station {station1.id}:{station1.name} KPI")
 print(f"Wait Time {station1.wait_time}, Work Time {station1.work_time}, Repair Time {station1.repair_time}, Total Time {station1.wait_time+station1.work_time+station1.repair_time}")
 print(f"Station {station2.id}:{station2.name} KPI")
 print(f"Wait Time {station2.wait_time}, Work Time {station2.work_time}, Repair Time {station2.repair_time}, Total Time {station2.wait_time+station2.work_time+station2.repair_time}")
+print(f"Station {station3.id}:{station3.name} KPI")
+print(f"Wait Time {station3.wait_time}, Work Time {station3.work_time}, Repair Time {station3.repair_time}, Total Time {station3.wait_time+station3.work_time+station3.repair_time}")
