@@ -34,28 +34,17 @@ class WorkStation:
         self.repair_time = 0.0
         self.total_time = 0.0
         
-    def process_item(self):
-        if self.id == 1:
-            self.item = Item()
-        if random.random() <= self.fail_rate:
-            print(f"Station {self.id} Failure")
-            print(f"Station {self.id} started repairs at {self.env.now:.2f}")
-            yield self.env.timeout(random.normalvariate(3))
-            print(f"Station {self.id} finished repairs at {self.env.now:.2f}") 
-        if self.item and self.raw_materials:
-            yield self.env.timeout(random.normalvariate(4))
-            self.item.process(self.id)
-            self.raw_materials = self.raw_materials - 1
-            print("Made item")
-        else:
-            print("No item")
-        
     def run(self) -> None: # type: ignore
         #Init some KPIs for output
         start_time = self.env.now
         while True:
             if self.id == 1:
                 self.item = Item()
+                
+            if self.item is None:
+                yield self.env.timeout(0.1) # Simply yield without a value to wait for an item
+                continue
+                
             if self.item:
                 if random.random() <= self.fail_rate:
                     print(f"Station {self.id} Failure")
@@ -73,6 +62,10 @@ class WorkStation:
                     print("Made item")
                     self.work_time = self.work_time + (self.env.now - start_time)
                     #TODO send item to next workstation
+                    for station in self.next:
+                        #TODO add a condition to check state of the station
+                        station.item = self.item
+                        continue
                     self.item = None
                     start_time = self.env.now
                 #TODO add an else clause to wait for raw materials
@@ -82,14 +75,15 @@ class WorkStation:
                     self.raw_materials = 25
                     print(f"Station {self.id} reloaded at {self.env.now:.2f}")
                     self.wait_time = self.env.now - start_time + self.wait_time
-            else:
-                print("No item")
             
             
 env = simpy.Environment()
 resource = simpy.Resource(env, 3)
 
-station1 = WorkStation(env, resource, 1, 0.20, [2], "assembly")
+station2 = WorkStation(env, resource, 2, 0.20, [], "assembly")
+station1 = WorkStation(env, resource, 1, 0.20, [station2], "assembly")
 env.run(until=200)
 print(f"Station {station1.id}:{station1.name} KPI")
-print(f"Wait Time {station1.wait_time}, Work Time {station1.work_time}, Repair Time {station1.work_time}")
+print(f"Wait Time {station1.wait_time}, Work Time {station1.work_time}, Repair Time {station1.repair_time}, Total Time {station1.wait_time+station1.work_time+station1.repair_time}")
+print(f"Station {station2.id}:{station2.name} KPI")
+print(f"Wait Time {station2.wait_time}, Work Time {station2.work_time}, Repair Time {station2.repair_time}, Total Time {station2.wait_time+station2.work_time+station2.repair_time}")
