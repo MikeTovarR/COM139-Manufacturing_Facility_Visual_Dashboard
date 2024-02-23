@@ -24,7 +24,7 @@ class WorkStation:
         self.action = self.env.process(self.run())
         self.raw_materials : int = 25
         self.next = []
-        self.item = deque()
+        self.item = None
         self.fail_rate : float = fail_rate
         self.id = id
         self.name = _name
@@ -47,7 +47,7 @@ class WorkStation:
         start_time = self.env.now
         while True:
             if self.id == 1:
-                self.item.append(Item())
+                self.item = Item()
                 
             if not self.item:
                 yield self.env.timeout(0.1) # Simply yield without a value to wait for an item
@@ -67,7 +67,7 @@ class WorkStation:
                     self.wait_time = self.env.now - start_time + self.wait_time
                     start_time = self.env.now
                     yield self.env.timeout(random.normalvariate(4))
-                    self.item[0].process(self.id)
+                    self.item.process(self.id)
                     self.raw_materials = self.raw_materials - 1
                     print(f"Station {self.id} made item at {self.env.now}")
                     self.work_time = self.work_time + (self.env.now - start_time)
@@ -79,7 +79,9 @@ class WorkStation:
                             passed_item = True
                         for station in self.next:
                             #TODO add a condition to check state of the station
-                            if station.id in self.item[0].stages_passed:
+                            if station.item:
+                                continue
+                            if station.id in self.item.stages_passed:
                                 # print(self.id)
                                 # print(f"{station.id} already processed here")
                                 # print(self.next)
@@ -88,12 +90,13 @@ class WorkStation:
                                 # print(self.id)
                                 # print(f"{station.id} Machine broken")
                                 continue
-                            if station.id == 6 and len(self.item[0].stages_left) > 1:
-                                print(self.item[0].stages_left)
+                            if station.id == 6 and len(self.item.stages_left) > 1:
+                                print(self.item.stages_left)
                                 print("Cannot advance to station 6")
                                 continue
                             passed_item = True
-                            station.item.append(self.item.popleft())
+                            station.item = self.item
+                            self.item = None
                             print(f"Station {self.id} passed item to {station.id}")
                             break
                         print("waiting")
