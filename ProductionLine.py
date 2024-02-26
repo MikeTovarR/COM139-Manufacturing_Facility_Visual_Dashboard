@@ -142,7 +142,6 @@ class WorkStation:
                 print(f"Oh no! There was an accident and the production was stopped by today.\nProduction stopped at {self.env.now: .2f}")
                 raise SimulationStop()
             
-            
 env = simpy.Environment()
 resource = simpy.Resource(env, 3)
 
@@ -160,9 +159,10 @@ station5.add_next([station4, station6])
 # env.run(until=200)
 
 try: 
-    env.run(until=200)
+    env.run(until=500)
 except SimulationStop:
     print("Simulation stopped")
+
 print(f"Station {station1.id}: {station1.name} KPI")
 print(f"-- Wait Time {station1.wait_time:.2f}, Work Time {station1.work_time:.2f}, Repair Time {station1.repair_time:.2f}, Total Time {station1.wait_time+station1.work_time+station1.repair_time:.2f}")
 print(f"Station {station2.id}: {station2.name} KPI")
@@ -177,3 +177,4 @@ print(f"Station {station6.id}: {station6.name} KPI")
 print(f"-- Wait Time {station6.wait_time:.2f}, Work Time {station6.work_time:.2f}, Repair Time {station6.repair_time:.2f}, Total Time {station6.wait_time+station6.work_time+station6.repair_time:.2f}")
 print(f"Finished products: {station6.finished_items}")
 print(f"Rejected products: {station6.rejected_items}")
+# python ProductionLine.py > output.txt
