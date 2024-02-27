@@ -1,6 +1,11 @@
+# Authors: Carlos Manuel Velez, Miguel Angel Tovar, Andres Martínez Cabrera
+
 import simpy
 import random
 from collections import deque
+
+# TO RUN 
+# python ProductionLine.py > output.txt
 
 class SimulationStop(Exception):
     pass
@@ -112,6 +117,7 @@ class WorkStation:
                         start_time = self.env.now
                         if not self.next:
                             self.passed_item = True
+                            self.item = None
                         for station in self.next:
                             # Check state of the station
                             if station.item:
@@ -176,8 +182,6 @@ class WorkStation:
                 print(f"Oh no! There was an accident and the production was stopped by today.\nProduction stopped at {self.env.now: .2f}")
                 raise SimulationStop()
             
-# python ProductionLine.py > output.txt
-            
 total_production = 0
 total_failure = 0
 total_occupancy = [0, 0, 0, 0, 0, 0]
@@ -234,7 +238,7 @@ for day in range(days):
     bottleneck_time = station1.bottleneck_time+station2.bottleneck_time+station3.bottleneck_time+station4.bottleneck_time+station5.bottleneck_time+station6.bottleneck_time
     total_waiting_time += waiting_time + bottleneck_time
 
-    print(f"Station {station1.id}: {station1.name} KPI")
+    print(f"\nStation {station1.id}: {station1.name} KPI")
     print(f"-- Wait Time {station1.wait_time+station1.bottleneck_time:.2f}, Work Time {station1.work_time:.2f}, Repair Time {station1.repair_time:.2f}, Total Time {station1.wait_time+station1.work_time+station1.repair_time:.2f}")
     print(f"Station {station2.id}: {station2.name} KPI")
     print(f"-- Wait Time {station2.wait_time+station2.bottleneck_time:.2f}, Work Time {station2.work_time:.2f}, Repair Time {station2.repair_time:.2f}, Total Time {station2.wait_time+station2.work_time+station2.repair_time:.2f}")
@@ -258,7 +262,7 @@ for day in range(days):
 
 print(f"++++++++ After {days} days of production ++++++++")
 print(f"-- Average production per day: {total_production/days:.2f}")
-print(f"-- Average quality failures per day: {total_failure/days:.2f}")
+print(f"-- Average quality failures per day : {total_failure/days:.2f}")
 print(f"-- Average occupancy for each workstation per day: [{total_occupancy[0]/days:.2f}, {total_occupancy[1]/days:.2f}, {total_occupancy[2]/days:.2f}, {total_occupancy[3]/days:.2f}, {total_occupancy[4]/days:.2f}, {total_occupancy[5]/days:.2f}]")
 print(f"-- Average downtime  for each workstation per day: [{total_downtime[0]/days:.2f}, {total_occupancy[1]/days:.2f}, {total_occupancy[2]/days:.2f}, {total_occupancy[3]/days:.2f}, {total_occupancy[4]/days:.2f}, {total_occupancy[5]/days:.2f}]")
 print(f"-- Average fix time per day: {total_fix_time/days:.2f}")
