@@ -11,3 +11,69 @@
           5  Month         108  423.114605  60.617189   6.605775           9.1        51.517189
     STATION PERIOD  PRODUCTION   OCCUPANCY   DOWNTIME   FIX_TIME  WAITING_TIME  BOTTLENECK_TIME
           6  Month         108  423.114605  60.617189   6.605775           9.1        51.517189
+
+{
+    "2024-04-19-07-45": [
+        {
+            "STATION": 1,
+            "PERIOD": "Month",
+            "PRODUCTION": 108,
+            "OCCUPANCY": 423.114605,
+            "DOWNTIME": 60.617189,
+            "FIX_TIME": 6.605775,
+            "WAITING_TIME": 9.1,
+            "BOTTLENECK_TIME": 51.517189
+        },
+        {
+            "STATION": 2,
+            "PERIOD": "Month",
+            "PRODUCTION": 108,
+            "OCCUPANCY": 423.114605,
+            "DOWNTIME": 60.617189,
+            "FIX_TIME": 6.605775,
+            "WAITING_TIME": 9.1,
+            "BOTTLENECK_TIME": 51.517189
+        },
+        {
+            "STATION": 3,
+            "PERIOD": "Month",
+            "PRODUCTION": 108,
+            "OCCUPANCY": 423.114605,
+            "DOWNTIME": 60.617189,
+            "FIX_TIME": 6.605775,
+            "WAITING_TIME": 9.1,
+            "BOTTLENECK_TIME": 51.517189
+        },
+        {
+            "STATION": 4,
+            "PERIOD": "Month",
+            "PRODUCTION": 108,
+            "OCCUPANCY": 423.114605,
+            "DOWNTIME": 60.617189,
+            "FIX_TIME": 6.605775,
+            "WAITING_TIME": 9.1,
+            "BOTTLENECK_TIME": 51.517189
+        },
+        {
+            "STATION": 5,
+            "PERIOD": "Month",
+            "PRODUCTION": 108,
+            "OCCUPANCY": 423.114605,
+            "DOWNTIME": 60.617189,
+            "FIX_TIME": 6.605775,
+            "WAITING_TIME": 9.1,
+            "BOTTLENECK_TIME": 51.517189
+        },
+        {
+            "STATION": 6,
+            "PERIOD": "Month",
+            "PRODUCTION": 108,
+            "REJECTED": 0,
+            "OCCUPANCY": 423.114605,
+            "DOWNTIME": 60.617189,
+            "FIX_TIME": 6.605775,
+            "WAITING_TIME": 9.1,
+            "BOTTLENECK_TIME": 51.517189
+        }
+    ]
+}

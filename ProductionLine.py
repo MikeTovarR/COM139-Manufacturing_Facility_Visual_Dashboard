@@ -4,6 +4,8 @@ import simpy
 import random
 from collections import deque
 import pandas as pd
+import pymongo
+from datetime import datetime
 
 # TO RUN 
 # python ProductionLine.py > output.txt
@@ -313,12 +315,12 @@ def run_production(period: str) -> pd.DataFrame:
                                               'BOTTLENECK_TIME'])
     data_station5 = pd.DataFrame(columns=['STATION', 'PERIOD', 'PRODUCTION', 'OCCUPANCY', 'DOWNTIME', 'FIX_TIME', 'WAITING_TIME', 
                                               'BOTTLENECK_TIME'])
-    data_station6 = pd.DataFrame(columns=['STATION', 'PERIOD', 'PRODUCTION', 'REFECTED', 'OCCUPANCY', 'DOWNTIME', 'FIX_TIME', 
+    data_station6 = pd.DataFrame(columns=['STATION', 'PERIOD', 'PRODUCTION', 'REJECTED', 'OCCUPANCY', 'DOWNTIME', 'FIX_TIME', 
                                           'WAITING_TIME', 'BOTTLENECK_TIME'])
 
     production_resume = [data_station1, data_station2, data_station3, data_station4, data_station5, data_station6]
     # We should include rejected items but they only are counted at the last station, we should decide how to show them
-    print(production_resume)
+    
     for i in range(6):
         if i < 5:
             production_resume[i].loc[len(production_resume[i])] = [i+1, period, total_production[i], total_occupancy[i], total_downtime[i], total_fix_time[i],
@@ -329,11 +331,28 @@ def run_production(period: str) -> pd.DataFrame:
 
     return production_resume
 
+connection_string = "mongodb+srv://0234500:dQ90cqBgNLLY6PKg@productionline.2brel6r.mongodb.net/"
+client = pymongo.MongoClient(connection_string)
 
+db = client["ProductionLine"]
+collection = db["Runs"]
 
 # Dict to define how many days will run each selected period
 periods = {"Day": 1, "Week": 7, "Month": 30, "Quarter": 120, "Year": 365}
 
 data = run_production("Week") # Define the period of the run and store the result in a variable
+
+data_dict = {}
+stations_data = []
+
 for df in data:
     print(df)
+    station_dict = df.to_dict()
+    station_dict = {key: value[0] for key, value in station_dict.items()}
+    stations_data.append(station_dict)
+
+now = datetime.now()
+date = now.strftime("%Y-%m-%d_%H:%M:%S")
+
+data_dict[f"{date}"] = stations_data
+collection.insert_one(data_dict)
