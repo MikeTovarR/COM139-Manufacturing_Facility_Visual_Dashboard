@@ -1,4 +1,4 @@
-/* global use, db */
+/*global use, db*/
 // MongoDB Playground
 // To disable this template go to Settings | MongoDB | Use Default Template For Playground.
 // Make sure you are connected to enable completions and to be able to run a playground.
@@ -10,10 +10,10 @@
 // https://www.mongodb.com/docs/mongodb-vscode/playgrounds/
 
 // Select the database to use.
-use('mongodbVSCodePlaygroundDB');
+use('ProductionLine');
 
 // Insert a few documents into the sales collection.
-db.getCollection('sales').insertMany([
+db.getCollection('Stations').insertMany([
   { 'item': 'abc', 'price': 10, 'quantity': 2, 'date': new Date('2014-03-01T08:00:00Z') },
   { 'item': 'jkl', 'price': 20, 'quantity': 1, 'date': new Date('2014-03-01T09:00:00Z') },
   { 'item': 'xyz', 'price': 5, 'quantity': 10, 'date': new Date('2014-03-15T09:00:00Z') },
@@ -23,7 +23,7 @@ db.getCollection('sales').insertMany([
   { 'item': 'def', 'price': 7.5, 'quantity': 10, 'date': new Date('2015-09-10T08:43:00Z') },
   { 'item': 'abc', 'price': 10, 'quantity': 5, 'date': new Date('2016-02-06T20:20:13Z') },
 ]);
-
+/*
 // Run a find command to view items sold on April 4th, 2014.
 const salesOnApril4th = db.getCollection('sales').find({
   date: { $gte: new Date('2014-04-04'), $lt: new Date('2014-04-05') }
@@ -41,3 +41,4 @@ db.getCollection('sales').aggregate([
   // Group the total sales for each product.
   { $group: { _id: '$item', totalSaleAmount: { $sum: { $multiply: [ '$price', '$quantity' ] } } } }
 ]);
+*/
