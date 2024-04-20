@@ -183,28 +183,15 @@ class WorkStation:
                 #print(f"Oh no! There was an accident and the production was stopped by today.\nProduction stopped at {self.env.now: .2f}")
                 raise SimulationStop()
 
-def run_production(period: str) -> list:
-
-    data_station1 = pd.DataFrame(columns=['STATION', 'PERIOD', 'DAY', 'PRODUCTION', 'OCCUPANCY', 'DOWNTIME', 'FIX_TIME', 'WAITING_TIME', 
-                                              'BOTTLENECK_TIME'])
-    data_station2 = pd.DataFrame(columns=['STATION', 'PERIOD', 'DAY', 'PRODUCTION', 'OCCUPANCY', 'DOWNTIME', 'FIX_TIME', 'WAITING_TIME', 
-                                              'BOTTLENECK_TIME'])
-    data_station3 = pd.DataFrame(columns=['STATION', 'PERIOD', 'DAY', 'PRODUCTION', 'OCCUPANCY', 'DOWNTIME', 'FIX_TIME', 'WAITING_TIME', 
-                                              'BOTTLENECK_TIME'])
-    data_station4 = pd.DataFrame(columns=['STATION', 'PERIOD', 'DAY', 'PRODUCTION', 'OCCUPANCY', 'DOWNTIME', 'FIX_TIME', 'WAITING_TIME', 
-                                              'BOTTLENECK_TIME'])
-    data_station5 = pd.DataFrame(columns=['STATION', 'PERIOD', 'DAY', 'PRODUCTION', 'OCCUPANCY', 'DOWNTIME', 'FIX_TIME', 'WAITING_TIME', 
-                                              'BOTTLENECK_TIME'])
-    data_station6 = pd.DataFrame(columns=['STATION', 'PERIOD', 'DAY', 'PRODUCTION', 'REFECTED', 'OCCUPANCY', 'DOWNTIME', 'FIX_TIME', 
-                                          'WAITING_TIME', 'BOTTLENECK_TIME'])
+def run_production(period: str) -> pd.DataFrame:
     
-    
-    total_production = 0
+    total_production = [0, 0, 0, 0, 0, 0]
     total_failure = 0
     total_occupancy = [0, 0, 0, 0, 0, 0]
     total_downtime = [0, 0, 0, 0, 0, 0]
-    total_fix_time = 0
-    total_waiting_time = 0
+    total_fix_time = [0, 0, 0, 0, 0, 0]
+    total_bottleneck_time = [0, 0, 0, 0, 0, 0]
+    total_waiting_time = [0, 0, 0, 0, 0, 0]
 
     days = periods[period]
 
@@ -231,7 +218,13 @@ def run_production(period: str) -> list:
         except SimulationStop:
             print("Simulation stopped")
 
-        total_production += station6.finished_items
+        #total_production += station6.finished_items
+        total_production[0] += station1.finished_items
+        total_production[1] += station2.finished_items
+        total_production[2] += station3.finished_items
+        total_production[3] += station4.finished_items
+        total_production[4] += station5.finished_items
+        total_production[5] += station6.finished_items
 
         total_failure += station6.rejected_items
 
@@ -249,26 +242,32 @@ def run_production(period: str) -> list:
         total_downtime[4] += station5.wait_time + station5.bottleneck_time
         total_downtime[5] += station6.wait_time + station6.bottleneck_time
 
-        total_fix_time += station1.repair_time + station2.repair_time + station3.repair_time + station4.repair_time + station5.repair_time + station6.repair_time
+        total_fix_time[0] += station1.repair_time
+        total_fix_time[1] += station2.repair_time
+        total_fix_time[2] += station3.repair_time
+        total_fix_time[3] += station4.repair_time
+        total_fix_time[4] += station5.repair_time
+        total_fix_time[5] += station6.repair_time
 
-        waiting_time = station1.wait_time + station2.wait_time + station3.wait_time + station4.wait_time + station5.wait_time + station6.wait_time
-        bottleneck_time = station1.bottleneck_time+station2.bottleneck_time+station3.bottleneck_time+station4.bottleneck_time+station5.bottleneck_time+station6.bottleneck_time
-        total_waiting_time += waiting_time + bottleneck_time
+        total_waiting_time[0] += station1.wait_time
+        total_waiting_time[1] += station2.wait_time
+        total_waiting_time[2] += station3.wait_time
+        total_waiting_time[3] += station4.wait_time
+        total_waiting_time[4] += station5.wait_time
+        total_waiting_time[5] += station6.wait_time
 
-        data_station1.loc[len(data_station1)] = [1, period, f'{day+1}', station1.finished_items, station1.work_time, station1.wait_time + station1.bottleneck_time,
-                                                 station1.repair_time, station1.wait_time, station1.bottleneck_time]
-        data_station2.loc[len(data_station1)] = [2, period, f'{day+1}', station2.finished_items, station2.work_time, station2.wait_time + station2.bottleneck_time,
-                                                 station2.repair_time, station2.wait_time, station2.bottleneck_time]
-        data_station3.loc[len(data_station1)] = [3, period, f'{day+1}', station3.finished_items, station3.work_time, station3.wait_time + station3.bottleneck_time,
-                                                 station3.repair_time, station3.wait_time, station3.bottleneck_time]
-        data_station4.loc[len(data_station1)] = [4, period, f'{day+1}', station4.finished_items, station4.work_time, station4.wait_time + station4.bottleneck_time,
-                                                 station4.repair_time, station4.wait_time, station4.bottleneck_time]
-        data_station5.loc[len(data_station1)] = [5, period, f'{day+1}', station5.finished_items, station5.work_time, station5.wait_time + station5.bottleneck_time,
-                                                 station5.repair_time, station5.wait_time, station5.bottleneck_time]
-        data_station6.loc[len(data_station1)] = [6, period, f'{day+1}', station6.finished_items, station6.rejected_items, station6.work_time, 
-                                                 station6.wait_time + station6.bottleneck_time, station6.repair_time, station6.wait_time, 
-                                                 station6.bottleneck_time]
-    
+        total_bottleneck_time[0] += station1.bottleneck_time
+        total_bottleneck_time[1] += station2.bottleneck_time
+        total_bottleneck_time[2] += station3.bottleneck_time
+        total_bottleneck_time[3] += station4.bottleneck_time
+        total_bottleneck_time[4] += station5.bottleneck_time
+        total_bottleneck_time[5] += station6.bottleneck_time
+
+        # total_fix_time += station1.repair_time + station2.repair_time + station3.repair_time + station4.repair_time + station5.repair_time + station6.repair_time
+
+        # waiting_time = station1.wait_time + station2.wait_time + station3.wait_time + station4.wait_time + station5.wait_time + station6.wait_time
+        #bottleneck_time = station1.bottleneck_time+station2.bottleneck_time+station3.bottleneck_time+station4.bottleneck_time+station5.bottleneck_time+station6.bottleneck_time
+        #total_waiting_time += waiting_time + bottleneck_time
     """
     # prints of each run
         print(f"\nStation {station1.id}: {station1.name} KPI")
@@ -304,12 +303,31 @@ def run_production(period: str) -> list:
     print(f"-- Average waiting time per day: {total_waiting_time/days:.2f}")
 
     """
-    
+    data_station1 = pd.DataFrame(columns=['STATION', 'PERIOD', 'PRODUCTION', 'OCCUPANCY', 'DOWNTIME', 'FIX_TIME', 'WAITING_TIME', 
+                                              'BOTTLENECK_TIME'])
+    data_station2 = pd.DataFrame(columns=['STATION', 'PERIOD', 'PRODUCTION', 'OCCUPANCY', 'DOWNTIME', 'FIX_TIME', 'WAITING_TIME', 
+                                              'BOTTLENECK_TIME'])
+    data_station3 = pd.DataFrame(columns=['STATION', 'PERIOD', 'PRODUCTION', 'OCCUPANCY', 'DOWNTIME', 'FIX_TIME', 'WAITING_TIME', 
+                                              'BOTTLENECK_TIME'])
+    data_station4 = pd.DataFrame(columns=['STATION', 'PERIOD', 'PRODUCTION', 'OCCUPANCY', 'DOWNTIME', 'FIX_TIME', 'WAITING_TIME', 
+                                              'BOTTLENECK_TIME'])
+    data_station5 = pd.DataFrame(columns=['STATION', 'PERIOD', 'PRODUCTION', 'OCCUPANCY', 'DOWNTIME', 'FIX_TIME', 'WAITING_TIME', 
+                                              'BOTTLENECK_TIME'])
+    data_station6 = pd.DataFrame(columns=['STATION', 'PERIOD', 'PRODUCTION', 'REFECTED', 'OCCUPANCY', 'DOWNTIME', 'FIX_TIME', 
+                                          'WAITING_TIME', 'BOTTLENECK_TIME'])
+
+    production_resume = [data_station1, data_station2, data_station3, data_station4, data_station5, data_station6]
     # We should include rejected items but they only are counted at the last station, we should decide how to show them
+    print(production_resume)
+    for i in range(6):
+        if i < 5:
+            production_resume[i].loc[len(production_resume[i])] = [i+1, period, total_production[i], total_occupancy[i], total_downtime[i], total_fix_time[i],
+                                                            total_waiting_time[i], total_bottleneck_time[i]]
+        else:
+            production_resume[i].loc[len(production_resume[i])] = [i+1, period, total_production[i], total_failure, total_occupancy[i], total_downtime[i], total_fix_time[i],
+                                                            total_waiting_time[i], total_bottleneck_time[i]]
 
-    
-
-    return [data_station1, data_station2, data_station3, data_station4, data_station5, data_station6]
+    return production_resume
 
 
 
