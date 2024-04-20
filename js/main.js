@@ -29,30 +29,33 @@ Array.from(blocks).forEach(element => {
 var stages = document.getElementsByClassName("stage");
 
 Array.from(stages).forEach(element => {
-    element.addEventListener('dragenter', (event) => {
-        if (event.target.classList.contains("stage")) {
-            event.target.classList.add("dragover");
-        }
-    });
-
-    element.addEventListener('dragover', (event) => {
-        event.preventDefault();
-    });
-
-    element.addEventListener('dragleave', (event) => {
-        if (event.target.classList.contains("stage")) {
-            event.target.classList.remove("dragover");
-        }
-    });
-
-    element.addEventListener('drop', (event) => {
-        event.preventDefault();
-        if (event.target.classList.contains("stage")) {
-            if (dragged) {
-                dragged.parentNode.removeChild(dragged); // Remove dragged element from its original parent
-                event.target.appendChild(dragged); // Append dragged element to the drop target
+    if (element.id != "col1" && element.id != "col6") {
+        element.addEventListener('dragenter', (event) => {
+            if (event.target.classList.contains("stage")) {
+                event.target.classList.add("dragover");
             }
-            event.target.classList.remove("dragover");
-        }
-    });
+        });
+
+        element.addEventListener('dragover', (event) => {
+            event.preventDefault();
+        });
+
+        element.addEventListener('dragleave', (event) => {
+            if (event.target.classList.contains("stage")) {
+                event.target.classList.remove("dragover");
+            }
+        });
+
+        element.addEventListener('drop', (event) => {
+            event.preventDefault();
+            if (event.target.classList.contains("stage")) {
+                if (dragged) {
+                    dragged.parentNode.removeChild(dragged); // Remove dragged element from its original parent
+                    event.target.appendChild(dragged); // Append dragged element to the drop target
+                }
+                event.target.classList.remove("dragover");
+            }
+        });
+    }
+    
 });
