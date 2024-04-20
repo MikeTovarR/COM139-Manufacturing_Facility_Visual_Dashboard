@@ -9,6 +9,9 @@ const height = 400;
 
 var blocks = document.getElementsByClassName("block");
 let dragged = null;
+var calculate_button = document.getElementById("calculate_button")
+
+//element.addEventListener('click' => )
 
 Array.from(blocks).forEach(element => {
     element.addEventListener('dragstart', (event) => {
