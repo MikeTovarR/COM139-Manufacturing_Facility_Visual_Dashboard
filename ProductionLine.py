@@ -4,12 +4,16 @@ import simpy
 import random
 from collections import deque
 import pandas as pd
-import pymongo
+from pymongo import MongoClient
 from datetime import datetime
+from flask import Flask, request
+#from flask_cors import CORS
 
 # TO RUN 
 # python ProductionLine.py > output.txt
 
+#app = Flask(__name__)
+#CORS(app)
 class SimulationStop(Exception):
     pass
 
@@ -185,8 +189,11 @@ class WorkStation:
                 #print(f"Oh no! There was an accident and the production was stopped by today.\nProduction stopped at {self.env.now: .2f}")
                 raise SimulationStop()
 
-def run_production(period: str) -> pd.DataFrame:
+def run_production(period: int) -> pd.DataFrame:
     
+    # Dict to define how many days will run each selected period
+    periods = {"Day": 1, "Week": 7, "Month": 30, "Quarter": 120, "Year": 365}
+
     total_production = [0, 0, 0, 0, 0, 0]
     total_failure = 0
     total_occupancy = [0, 0, 0, 0, 0, 0]
@@ -319,7 +326,6 @@ def run_production(period: str) -> pd.DataFrame:
                                           'WAITING_TIME', 'BOTTLENECK_TIME'])
 
     production_resume = [data_station1, data_station2, data_station3, data_station4, data_station5, data_station6]
-    # We should include rejected items but they only are counted at the last station, we should decide how to show them
     
     for i in range(6):
         if i < 5:
@@ -331,28 +337,37 @@ def run_production(period: str) -> pd.DataFrame:
 
     return production_resume
 
-connection_string = "mongodb+srv://0234500:dQ90cqBgNLLY6PKg@productionline.2brel6r.mongodb.net/"
-client = pymongo.MongoClient(connection_string)
+#@app.route('/get_data', methods=['GET'])
+def main():
 
-db = client["ProductionLine"]
-collection = db["Runs"]
+    #period = request.args.get('selected_period')
+    period="Week"
 
-# Dict to define how many days will run each selected period
-periods = {"Day": 1, "Week": 7, "Month": 30, "Quarter": 120, "Year": 365}
+    connection_string = "mongodb+srv://0234500:dQ90cqBgNLLY6PKg@productionline.2brel6r.mongodb.net/" # a Andrés sí le sirve
+    client = MongoClient(connection_string)
 
-data = run_production("Week") # Define the period of the run and store the result in a variable
+    db = client["ProductionLine"]
+    collection = db["Runs"]
 
-data_dict = {}
-stations_data = []
+    data = run_production(period) # Define the period of the run and store the result in a variable
 
-for df in data:
-    print(df)
-    station_dict = df.to_dict()
-    station_dict = {key: value[0] for key, value in station_dict.items()}
-    stations_data.append(station_dict)
+    data_dict = {}
+    stations_data = []
 
-now = datetime.now()
-date = now.strftime("%Y-%m-%d_%H:%M:%S")
+    for df in data:
+        print(df)
+        station_dict = df.to_dict()
+        station_dict = {key: value[0] for key, value in station_dict.items()}
+        stations_data.append(station_dict)
 
-data_dict[f"{date}"] = stations_data
-collection.insert_one(data_dict)
+    now = datetime.now()
+    date = now.strftime("%Y-%m-%d_%H:%M:%S")
+
+    data_dict[f"{date}"] = stations_data
+    collection.insert_one(data_dict)
+
+    #return "Success"
+
+main()
+# if __name__ == '__main__':
+#     app.run(port=5000, debug=True)

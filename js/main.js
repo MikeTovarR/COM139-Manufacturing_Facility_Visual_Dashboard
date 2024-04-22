@@ -9,9 +9,26 @@ const height = 400;
 
 var blocks = document.getElementsByClassName("block");
 let dragged = null;
-var calculate_button = document.getElementById("calculate_button")
+var calculate_button = document.getElementById("calculate_button");
 
-//element.addEventListener('click' => )
+
+calculate_button.addEventListener('click', function() {
+    execute_simulation();
+});
+
+function execute_simulation() {
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET", "http://127.0.0.1:5000/get_data?selected_period=" + "Week", true); // cambiar Week a variable
+    xhr.onreadystatechange = function() {
+        if (xhr.readyState == 4 && xhr.status == 200) {
+            // var response = JSON.parse(xhr.responseText);
+            // alert(response.resultado);
+            console.log("Listo");
+        }
+    };
+    xhr.send();
+    
+}
 
 Array.from(blocks).forEach(element => {
     element.addEventListener('dragstart', (event) => {
