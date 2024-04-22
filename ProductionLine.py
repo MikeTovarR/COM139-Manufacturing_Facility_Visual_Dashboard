@@ -7,13 +7,13 @@ import pandas as pd
 from pymongo import MongoClient
 from datetime import datetime
 from flask import Flask, request
-#from flask_cors import CORS
+from flask_cors import CORS
 
 # TO RUN 
 # python ProductionLine.py > output.txt
 
-#app = Flask(__name__)
-#CORS(app)
+app = Flask(__name__)
+CORS(app)
 class SimulationStop(Exception):
     pass
 
@@ -337,13 +337,14 @@ def run_production(period: int) -> pd.DataFrame:
 
     return production_resume
 
-#@app.route('/get_data', methods=['GET'])
-def main():
+@app.route('/get_data', methods=['GET'])
+def get_data():
 
-    #period = request.args.get('selected_period')
+    period = request.args.get('selected_period')
     period="Week"
 
-    connection_string = "mongodb+srv://0234500:dQ90cqBgNLLY6PKg@productionline.2brel6r.mongodb.net/" # a Andrés sí le sirve
+    connection_string = "mongodb+srv://production:production@productionline.2brel6r.mongodb.net/" # a Andrés sí le sirve
+    # connection_string = "mongodb+srv://0234500:dQ90cqBgNLLY6PKg@productionline.2brel6r.mongodb.net/"
     client = MongoClient(connection_string)
 
     db = client["ProductionLine"]
@@ -366,8 +367,8 @@ def main():
     data_dict[f"{date}"] = stations_data
     collection.insert_one(data_dict)
 
-    #return "Success"
+    return "Success"
 
-main()
-# if __name__ == '__main__':
-#     app.run(port=5000, debug=True)
+# main()
+if __name__ == '__main__':
+    app.run(port=5000, debug=True)
