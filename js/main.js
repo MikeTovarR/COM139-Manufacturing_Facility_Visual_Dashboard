@@ -42,13 +42,6 @@ function execute_simulation() {
   xhr.send();
 }
 
-read_button.addEventListener("click", function () {
-  // ---------------------- read_button --------------------------
-  if (selectedKey != null) {
-    read(selectedKey);
-  }
-});
-
 combobox.addEventListener("change", function () {
   var selectedOptionIndex = this.value; // Obtener el índice de la opción seleccionada
   selectedKey = this.options[selectedOptionIndex].text; // Obtener el texto de la opción seleccionada
@@ -114,8 +107,7 @@ function read(key) {
 
       var data = JSON.parse(this.responseText); // Parsear el JSON obtenido del archivo
 
-      graphData = data[jsonKey];
-
+      graphData = data[`${jsonKey}`];
       graphDataBar();
     }
   };
@@ -125,41 +117,42 @@ function read(key) {
   xhttp.send(); // Enviar la solicitud
 }
 
-var xhttp = new XMLHttpRequest();
-var data;
+function loadDataFirst() {
+  var xhttp = new XMLHttpRequest();
+  var data;
 
-xhttp.onreadystatechange = function () {
-  // Definir la función de callback que manejará la respuesta
+  xhttp.onreadystatechange = function () {
+    // Definir la función de callback que manejará la respuesta
 
-  if (this.readyState == 4 && this.status == 200) {
-    // Verificar si la solicitud se ha completado y la respuesta está lista
+    if (this.readyState == 4 && this.status == 200) {
+      // Verificar si la solicitud se ha completado y la respuesta está lista
 
-    data = this.responseText.split("\n");
-    var textKey;
-    //console.log(data);
+      data = this.responseText.split("\n");
+      var textKey;
+      //console.log(data);
 
-    // Get the select element
-    var selectElement = document.getElementById("object-select");
+      // Get the select element
+      var selectElement = document.getElementById("object-select");
 
-    // Iterate over the array and add options to the select element
-    for (var i = 0; i < data.length; i++) {
-      if (data[i] != "") {
-        // When split at \n adds an empty file at the end, so here we discard it
-        var option = document.createElement("option");
-        option.text = data[i]; // The text of the option is the value at index i of the array
-        option.value = i; // The value of the option can be the index in this case
-        selectElement.appendChild(option);
-        textKey = data[i];
+      // Iterate over the array and add options to the select element
+      for (var i = 0; i < data.length; i++) {
+        if (data[i] != "") {
+          // When split at \n adds an empty file at the end, so here we discard it
+          var option = document.createElement("option");
+          option.text = data[i]; // The text of the option is the value at index i of the array
+          option.value = i; // The value of the option can be the index in this case
+          selectElement.appendChild(option);
+          textKey = data[i];
+        }
       }
+      selectedKey = textKey;
+      read(selectedKey);
     }
-    selectKey = textKey;
-    //read(textKey);
-    graphDataBar();
-  }
-};
+  };
 
-xhttp.open("GET", "./data_base/filenames.txt", true); // Especificar el método HTTP y la URL del archivo JSON
-xhttp.send(); // Enviar la solicitud
+  xhttp.open("GET", "./data_base/filenames.txt", true); // Especificar el método HTTP y la URL del archivo JSON
+  xhttp.send(); // Enviar la solicitud
+}
 
 function graphDataBar() {
   var selected = data_selection.value;
@@ -245,9 +238,13 @@ function graphDataBar() {
     .attr("font-size", "4rem")
     .attr("text-anchor", "middle")
     .style("fill", "black")
-    .text(`FACTORY ~ STATIONS ${selected} ~ ${graphData[0]["PERIOD"]}`);
+    .text(`FACTORY ~ STATIONS ${selected.replace(/_/g, ' ')} ~ ${graphData[0]["PERIOD"].toUpperCase()}`);
 }
 
 data_selection.addEventListener("change", function () {
   graphDataBar();
 });
+
+document.addEventListener("DOMContentLoaded", function() {
+  loadDataFirst();
+})
