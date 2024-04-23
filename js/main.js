@@ -2,8 +2,8 @@
 *    main.js
 */
 
-const margin = {left : 300, top : 20, right : 20, bottom : 100};
-const width = 600;
+const margin = {left : 50, top : 20, right : 20, bottom : 100};
+const width = 1000;
 const height = 400;
 
 // Drag and drop functions
@@ -18,6 +18,8 @@ var data_selection = document.getElementById("graph-select");
 var selectedKey;
 
 var graphData;
+
+const chart_area = document.getElementById("chart-area");
 
 calculate_button.addEventListener('click', function() {
     execute_simulation();
@@ -146,7 +148,8 @@ xhttp.onreadystatechange = function() { // Definir la función de callback que m
             }
         }
         selectKey = textKey;
-        read(textKey);
+        //read(textKey);
+        graphDataBar();
     }
 };
 
@@ -156,6 +159,7 @@ xhttp.send(); // Enviar la solicitud
 function graphDataBar() {
     var selected = data_selection.value;
     // Chart area
+    chart_area.innerHTML = ""; // Clear chart area between runs
     var g = d3.select("#chart-area").append("svg")
                 .attr('width', width + margin.left + margin.right)
                 .attr('height', height + margin.top + margin.bottom)
@@ -172,10 +176,10 @@ function graphDataBar() {
      var rects = g.selectAll("rect").data(graphData);
 
      rects.enter().append("rect")
-             .attr('x', (d) => {return x(graphData["STATION"])})
-             .attr('y', (d) => {return y(graphData[selected])})
+             .attr('x', (d) => {return x(d["STATION"])})
+             .attr('y', (d) => {return y(d[selected])})
              .attr('width', x.bandwidth())
-             .attr('height', (d) => {return height - y(graphData[selected])})
+             .attr('height', (d) => {return height - y(d[selected])})
              .attr('fill', 'orange');
 }
 

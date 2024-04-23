@@ -1,7 +1,7 @@
 svg {
 	margin: 20px;
-	width: 600px;
-	height: 400px
+	width: fit-content;
+	height: fit-content;
 }
 
 .graph {
