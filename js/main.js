@@ -12,7 +12,7 @@ var blocks = document.getElementsByClassName("block");
 let dragged = null;
 var calculate_button = document.getElementById("calculate_button");
 var read_button = document.getElementById("read_button");
-var combobox = document.getElementById("object-select");
+const combobox = document.getElementById("object-select");
 var data_selection = document.getElementById("graph-select");
 
 var selectedKey;
@@ -52,6 +52,7 @@ read_button.addEventListener("click", function () {
 combobox.addEventListener("change", function () {
   var selectedOptionIndex = this.value; // Obtener el índice de la opción seleccionada
   selectedKey = this.options[selectedOptionIndex].text; // Obtener el texto de la opción seleccionada
+  read(selectedKey);
 });
 
 Array.from(blocks).forEach((element) => {
@@ -115,10 +116,7 @@ function read(key) {
 
       graphData = data[jsonKey];
 
-      console.log(jsonKey);
-      graphData.forEach((station) => {
-        console.log(station);
-      });
+      graphDataBar();
     }
   };
 
