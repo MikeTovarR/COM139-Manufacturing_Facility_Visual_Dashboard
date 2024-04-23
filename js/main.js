@@ -107,7 +107,7 @@ function read(key) {
 
       var data = JSON.parse(this.responseText); // Parsear el JSON obtenido del archivo
 
-      graphData = data[`${jsonKey}`];
+      graphData = data[Object.keys(data)[0]];
       graphDataBar();
     }
   };
