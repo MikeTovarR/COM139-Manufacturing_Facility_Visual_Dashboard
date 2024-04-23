@@ -14,7 +14,7 @@
     <h1 class="text-center title">Factory Simulator</h1>
 
     <!-- Drag and drop blocks -->
-<div class="container mt-6 stage-area">
+<div class="container stage-area">
     <div class="row">
         <div class="col-md-2 stage" id="col1">
             <div id="workstation1" class="block" draggable="false">Station 1</div>
@@ -35,12 +35,9 @@
             <div id="workstation6" class="block" draggable="false">Station 6</div>
         </div>
     </div>
-    <div class="row">
-        <div>
-            <button class="block" id="calculate_button">Calculate</button>
-            <button class="block" id="read_button">Read Data</button>
-        </div>
-        
+    <div class="row justify-content-around">
+        <div class="col-md-4"><btn class="btn btn-primary" id="calculate_button">Calculate</btn></div>
+        <div class="col-md-4"><btn class="btn btn-primary" id="read_button">Read Data</btn></div>
     </div>
 </div>
 
@@ -48,15 +45,26 @@
 <div class="container graph mt-5">
     <div class="row">
         <div class="col-md-6 mx-auto selection">
-            <label for="object-select" class="form-label">Select Object:</label>
+            <label for="object-select" class="form-label">Select Date:</label>
             <select id="object-select" class="form-select"></select>
+        </div>
+        <div class="col-md-6 mx-auto selection">
+            <label for="object-select" class="form-label">Select Value:</label>
+            <select id="graph-select" class="form-select">
+                <option value="PRODUCTION">Production</option>
+                <option value="OCCUPANCY">Occupancy</option>
+                <option value="DOWN_TIME">Down Time</option>
+                <option value="FIX_TIME">Fix Time</option>
+                <option value="WAITING_TIME">Waiting Time</option>
+                <option value="BOTTLENECK_TIME">Bottleneck Time</option>
+            </select>
         </div>
         <div id="chart-area"></div>
     </div>
 </div>
 
 
-<script>
+<!-- <script>
         var xhttp = new XMLHttpRequest();
         var data;
         
@@ -85,7 +93,7 @@
         xhttp.open("GET", "./data_base/filenames.txt", true); // Especificar el método HTTP y la URL del archivo JSON
         xhttp.send(); // Enviar la solicitud
 
-</script>
+</script> -->
 
     
 

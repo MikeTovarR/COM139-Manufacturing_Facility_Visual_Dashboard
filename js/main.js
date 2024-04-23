@@ -2,6 +2,7 @@
 *    main.js
 */
 
+const margin = {left : 300, top : 20, right : 20, bottom : 100};
 const width = 600;
 const height = 400;
 
@@ -12,8 +13,11 @@ let dragged = null;
 var calculate_button = document.getElementById("calculate_button");
 var read_button = document.getElementById("read_button");
 var combobox = document.getElementById("object-select");
+var data_selection = document.getElementById("graph-select");
 
 var selectedKey;
+
+var graphData;
 
 calculate_button.addEventListener('click', function() {
     execute_simulation();
@@ -95,7 +99,7 @@ function read(key){
 
     var xhttp = new XMLHttpRequest();
 
-    const selectedKey = key;
+    const jsonKey = key.toString();
     
     xhttp.onreadystatechange = function() { // Definir la función de callback que manejará la respuesta
     
@@ -103,11 +107,78 @@ function read(key){
        
         var data = JSON.parse(this.responseText); // Parsear el JSON obtenido del archivo
         
-        console.log(data);
+        graphData = data[jsonKey];
+
+        console.log(jsonKey);
+        graphData.forEach(station => {
+            console.log(station);
+        });
     }
     };
     
-    xhttp.open("GET", "./data_base/"+selectedKey+".json", true); // Especificar el método HTTP y la URL del archivo JSON
+    xhttp.open("GET", "./data_base/"+jsonKey+".json", true); // Especificar el método HTTP y la URL del archivo JSON
 
     xhttp.send(); // Enviar la solicitud
 }
+
+var xhttp = new XMLHttpRequest();
+var data;
+
+xhttp.onreadystatechange = function() { // Definir la función de callback que manejará la respuesta
+
+    if (this.readyState == 4 && this.status == 200) { // Verificar si la solicitud se ha completado y la respuesta está lista
+    
+        data = this.responseText.split("\n");
+        var textKey;
+        //console.log(data);
+
+        // Get the select element
+        var selectElement = document.getElementById("object-select");
+
+        // Iterate over the array and add options to the select element
+        for (var i = 0; i < data.length; i++) {
+            if(data[i] != ""){ // When split at \n adds an empty file at the end, so here we discard it
+                var option = document.createElement("option");
+                option.text = data[i]; // The text of the option is the value at index i of the array
+                option.value = i; // The value of the option can be the index in this case
+                selectElement.appendChild(option);
+                textKey = data[i];
+            }
+        }
+        selectKey = textKey;
+        read(textKey);
+    }
+};
+
+xhttp.open("GET", "./data_base/filenames.txt", true); // Especificar el método HTTP y la URL del archivo JSON
+xhttp.send(); // Enviar la solicitud
+
+function graphDataBar() {
+    var selected = data_selection.value;
+    // Chart area
+    var g = d3.select("#chart-area").append("svg")
+                .attr('width', width + margin.left + margin.right)
+                .attr('height', height + margin.top + margin.bottom)
+            .append("g")
+                .attr('transform', `translate(${margin.left}, ${margin.top})`);
+    const values = graphData.map((d) => {return d[selected]});
+    const stations = graphData.map((d) => {return d["STATION"]});
+    console.log(values);
+    console.log(stations);
+    var maxData = d3.max(values);
+    const y = d3.scaleLinear().domain([0, maxData]).range([height, 0]);
+    const x = d3.scaleBand().domain(stations).range([0, width]).paddingInner(0.3).paddingOuter(0.3);
+     // Bar data
+     var rects = g.selectAll("rect").data(graphData);
+
+     rects.enter().append("rect")
+             .attr('x', (d) => {return x(graphData["STATION"])})
+             .attr('y', (d) => {return y(graphData[selected])})
+             .attr('width', x.bandwidth())
+             .attr('height', (d) => {return height - y(graphData[selected])})
+             .attr('fill', 'orange');
+}
+
+data_selection.addEventListener('change', function() {
+    graphDataBar();
+});

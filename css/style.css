@@ -5,6 +5,7 @@ svg {
 }
 
 .graph {
+	margin-top: 5rem;
 	border-style: solid;
 	border-color: black;
 	border-radius: 5px;
