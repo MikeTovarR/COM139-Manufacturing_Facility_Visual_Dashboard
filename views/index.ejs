@@ -5,9 +5,9 @@
     <meta name="description" content="">
     <title>Template</title>
     <!-- Bootstrap -->
-    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
     <!-- Custom styling -->
-    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 
 <body>
@@ -55,12 +55,32 @@
         </div>
     </div>
 
+    <script>
+        var valores = JSON.parse('<%- JSON.stringify(message) %>');
+
+        // This JavaScript code will populate the select element with options
+        document.addEventListener("DOMContentLoaded", async () => {
+            // Fetch data from the server
+
+            // Get the select element
+            var selectElement = document.getElementById("object-select");
+
+            // Iterate over the array and add options to the select element
+            for (var i = 0; i < valores.length; i++) {
+                var option = document.createElement("option");
+                option.text = valores[i]; // The text of the option is the value at index i of the array
+                option.value = i; // The value of the option can be the index in this case
+                selectElement.appendChild(option);
+            }
+        });
+    </script>
+
 <!-- External JS libraries -->
 <script src="js/d3.min.js"></script>
 <!-- Custom JS -->
 <script src="js/main.js"></script>
-<!-- Connection JS -->
-<script src="js/connection.mongodb.js"></script>
+<!-- Connection JS <script src="js/connection.mongodb.js"></script>-->
+
 
 </body>
 </html>
