@@ -2,12 +2,13 @@
 
 import simpy
 import random
-from collections import deque
 import pandas as pd
-from pymongo import MongoClient
 from datetime import datetime
+import json
 from flask import Flask, request
 from flask_cors import CORS
+import os
+
 
 # TO RUN 
 # python ProductionLine.py > output.txt
@@ -337,18 +338,11 @@ def run_production(period: int) -> pd.DataFrame:
 
     return production_resume
 
+
 @app.route('/get_data', methods=['GET'])
 def get_data():
 
-    period = request.args.get('selected_period')
     period="Week"
-
-    connection_string = "mongodb+srv://production:production@productionline.2brel6r.mongodb.net/" # a Andrés sí le sirve
-    # connection_string = "mongodb+srv://0234500:dQ90cqBgNLLY6PKg@productionline.2brel6r.mongodb.net/"
-    client = MongoClient(connection_string)
-
-    db = client["ProductionLine"]
-    collection = db["Runs"]
 
     data = run_production(period) # Define the period of the run and store the result in a variable
 
@@ -362,13 +356,29 @@ def get_data():
         stations_data.append(station_dict)
 
     now = datetime.now()
-    date = now.strftime("%Y-%m-%d_%H:%M:%S")
+    date = now.strftime("%Y-%m-%d_%H-%M-%S") # se cambiaron los : por -, por formato de nombre de archivo que no permite :
 
     data_dict[f"{date}"] = stations_data
-    collection.insert_one(data_dict)
+
+    json_file = f"data_base/{date}.json"
+    json_data = json.dumps(data_dict, indent=4)
+    with open(json_file, "w") as file:
+        file.write(json_data)
+
+    get_jsons_list()
 
     return "Success"
 
-# main()
+def get_jsons_list():
+    all_files = os.listdir("data_base")
+    json_files = []
+    for file in all_files:
+        if file[19:] == ".json":
+            json_files.append(file)
+
+    with open("data_base/filenames.txt", "w") as file:
+        for json_file in json_files:
+            file.write(json_file[0:19] + "\n")
+
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
