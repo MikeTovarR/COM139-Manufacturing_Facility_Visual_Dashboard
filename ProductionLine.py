@@ -391,7 +391,6 @@ def get_query():
     for run in run_dicts:
         try:
             query[date] = run[date]
-            print(query)
             #result = {q['STATION']-1: q[value] for q in query}
             return jsonify(query)
         except:
