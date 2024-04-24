@@ -356,7 +356,6 @@ def get_data():
     stations_data = []
 
     for df in data:
-        print(df)
         station_dict = df.to_dict()
         station_dict = {key: value[0] for key, value in station_dict.items()}
         stations_data.append(station_dict)
@@ -367,7 +366,7 @@ def get_data():
     data_dict[f"{date}"] = stations_data
     collection.insert_one(data_dict)
 
-    return "Success"
+    return jsonify({"date":date})
 
 @app.route('/get_query', methods=['GET'])
 def get_query():
@@ -395,8 +394,6 @@ def get_query():
             return jsonify(query)
         except:
             continue
-
-    print(query)
     
     # Return the DataFrame
     return jsonify({})

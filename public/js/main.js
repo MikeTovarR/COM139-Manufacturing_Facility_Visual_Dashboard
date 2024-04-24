@@ -35,7 +35,10 @@ function execute_simulation() {
         if (xhr.readyState == 4 && xhr.status == 200) {
             // var response = JSON.parse(xhr.responseText);
             // alert(response.resultado);
-            console.log("Listo");
+            const data = JSON.parse(xhr.responseText);
+            var date = data["date"]
+            read(date);
+            console.log("Busqueda subida: " + date);
         }
     };
     xhr.send();
