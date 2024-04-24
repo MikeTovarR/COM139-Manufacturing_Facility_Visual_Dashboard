@@ -4,6 +4,10 @@ svg {
 	height: fit-content;
 }
 
+svg rect {
+	clip-path: rect(0% 0% 110% 100% round 5%);
+}
+
 .graph {
 	margin-top: 5rem;
 	border-style: solid;

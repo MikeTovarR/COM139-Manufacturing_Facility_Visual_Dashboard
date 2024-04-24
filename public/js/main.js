@@ -3,8 +3,8 @@
 */
 
 const margin = { left: 100, top: 20, right: 20, bottom: 100 };
-const width = 600;
-const height = 400;
+const width = 1000;
+const height = 500;
 
 // Drag and drop functions
 
@@ -156,7 +156,7 @@ function graphDataBar() {
         .attr("height", (d) => {
             return height - y(d[selected]);
         })
-        .attr("fill", "orange");
+        .attr("fill", "#286090");
   
     g.append("g")
         .attr("class", "left axis")
