@@ -1,10 +1,11 @@
 svg {
 	margin: 20px;
-	width: 600px;
-	height: 400px
+	width: fit-content;
+	height: fit-content;
 }
 
 .graph {
+	margin-top: 5rem;
 	border-style: solid;
 	border-color: black;
 	border-radius: 5px;

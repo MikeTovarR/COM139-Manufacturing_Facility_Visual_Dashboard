@@ -6,8 +6,9 @@ from collections import deque
 import pandas as pd
 from pymongo import MongoClient
 from datetime import datetime
-from flask import Flask, request
+from flask import Flask, request, jsonify
 from flask_cors import CORS
+import os
 
 # TO RUN 
 # python ProductionLine.py > output.txt
@@ -341,7 +342,6 @@ def run_production(period: int) -> pd.DataFrame:
 def get_data():
 
     period = request.args.get('selected_period')
-    period="Week"
 
     connection_string = "mongodb+srv://production:production@productionline.2brel6r.mongodb.net/" # a Andrés sí le sirve
     # connection_string = "mongodb+srv://0234500:dQ90cqBgNLLY6PKg@productionline.2brel6r.mongodb.net/"
@@ -362,12 +362,45 @@ def get_data():
         stations_data.append(station_dict)
 
     now = datetime.now()
-    date = now.strftime("%Y-%m-%d_%H:%M:%S")
+    date = now.strftime("%Y-%m-%d_%H-%M-%S")
 
     data_dict[f"{date}"] = stations_data
     collection.insert_one(data_dict)
 
     return "Success"
+
+@app.route('/get_query', methods=['GET'])
+def get_query():
+    date = request.args.get('date')
+    value = 'PRODUCTION'
+    
+    # Connect to the MongoDB database
+    connection_string = "mongodb+srv://production:production@productionline.2brel6r.mongodb.net/"
+    client = MongoClient(connection_string)
+    db = client["ProductionLine"]
+    collection = db["Runs"]
+
+    # Query the Runs collection to get all documents
+    runs = collection.find()
+
+    # Convert the runs to a list of dictionaries
+    run_dicts = list(runs)
+
+    query = dict()
+    # Convert the list of dictionaries into a single dictionary
+    for run in run_dicts:
+        try:
+            query[date] = run[date]
+            print(query)
+            #result = {q['STATION']-1: q[value] for q in query}
+            return jsonify(query)
+        except:
+            continue
+
+    print(query)
+    
+    # Return the DataFrame
+    return jsonify({})
 
 # main()
 if __name__ == '__main__':
