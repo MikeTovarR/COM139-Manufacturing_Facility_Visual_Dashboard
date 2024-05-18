@@ -21,6 +21,7 @@ var selectedKey;
 var graphData;
 
 const chart_area = document.getElementById("chart-area");
+const draw_area = document.getElementById("stage-area");
 
 calculate_button.addEventListener('click', function() {
     execute_simulation();
@@ -203,3 +204,76 @@ function graphDataBar() {
 data_selection.addEventListener("change", function () {
     graphDataBar();
 });
+
+function createCircle(id, x, y) {
+    const circle = document.createElement('div');
+    draw_area.appendChild(circle);
+    circle.className = 'circle-item';
+    circle.id = id;
+    circle.style.left = `${x}px`;
+    circle.style.top = `${y}px`;
+}
+
+function moveCircle(id, x1, y1, x2, y2) {
+    const circle = document.getElementById(id);
+    if (circle) {
+        circle.style.left = `${x1}px`;
+        circle.style.top = `${y1}px`;
+
+        // circle.animate([{transform: `translate(${x2 - x1}px, ${y2 - y1})px`}], {
+        //     duration: 1000,
+        //     fill: 'forwards',
+        //     easing: 'ease-in-out'
+        // });
+
+        circle.style.transform = `translate(${x2}px, ${y2}px)`;
+
+    } else {
+        console.error('No circle found with id ' + id);
+    }
+}
+
+function removeCircle(id) {
+    const circle = document.getElementById(id);
+    if (circle) {
+        circle.remove();
+    } else {
+        console.error(`No circle with id ${id}`);
+    }
+}
+
+function getCoordinatesFromStationID(id) {
+    switch(id){
+        case 1: return [0, 50];
+        case 2: return [50, 50];
+        case 3: return [100, 50];
+        case 4: return [150, 0];
+        case 5: return [150, 100];
+        case 6: return [200, 50];
+    }
+    return [-1, -1];
+}
+
+/*
+    Use for testing purposes, change for call for mongodb calls for final function
+*/
+fetch('js/movements.json')
+    .then(response => response.json())
+    .then( data => {
+        console.log("Production line movements");
+        console.log(JSON.stringify(data));
+
+        // Moments
+        Object.keys(data).forEach(key => {
+            // Products
+            Object.entries(data[key]).forEach(([innerKey, innerValue]) => {
+                if (innerValue == 1) {
+                    createCircle(innerKey, 0, 50);
+                }
+                setTimeout(() => {
+                    moveCircle(innerKey, 0, 50, 100, 0);
+                }, 100);
+            });
+        });
+
+    });
