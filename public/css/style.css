@@ -57,6 +57,5 @@ svg {
 	background-color: red;
 	border-radius: 50%;
 	position: absolute;
-	transition: transform 1s ease-in-out; /* Updated transition property */
 	z-index: 100;
 }

@@ -222,14 +222,15 @@ function moveCircle(id, x1, y1, x2, y2) {
     if (circle) {
         circle.style.left = `${x1}px`;
         circle.style.top = `${y1}px`;
-
-        // circle.animate([{transform: `translate(${x2 - x1}px, ${y2 - y1})px`}], {
-        //     duration: 1000,
-        //     fill: 'forwards',
-        //     easing: 'ease-in-out'
-        // });
-
+        circle.style.transition = `transform 0.5s ease-in-out`;
         circle.style.transform = `translate(${x2}px, ${y2}px)`;
+        setTimeout(() => {
+            circle.style.left = `${x1 + x2}px`;
+            circle.style.top = `${y1 + y2}px`;
+            circle.style.transition = `none`;
+            circle.style.transform = `translate(0px, 0px)`;
+        }, 500);
+
 
     } else {
         console.error('No circle found with id ' + id);
@@ -247,14 +248,30 @@ function removeCircle(id) {
 
 function getCoordinatesFromStationID(id) {
     switch(id){
-        case 1: return [0, 50];
-        case 2: return [50, 50];
-        case 3: return [100, 50];
-        case 4: return [150, 0];
-        case 5: return [150, 100];
-        case 6: return [200, 50];
+        case 1: return [0, 100];
+        case 2: return [100, 100];
+        case 3: return [200, 100];
+        case 4: return [300, 0];
+        case 5: return [400, 200];
+        case 6: return [400, 100];
     }
     return [-1, -1];
+}
+
+// Get translate coordinates by directions
+// 0 - right
+// 1 - upper-right
+// 2 - lower-right
+// 3 - upper
+// 4 - lower
+function moveDirection(dir) {
+    switch(dir){
+        case 0: return [100, 0];
+        case 1: return [100, -100];
+        case 2: return [100, 100];
+        case 3: return [0, -100];
+        case 4: return [0, 100];
+    }
 }
 
 /*
@@ -262,18 +279,40 @@ function getCoordinatesFromStationID(id) {
 */
 fetch('js/movements.json')
     .then(response => response.json())
-    .then( data => {
-        // Moments
-        Object.keys(data).forEach(key => {
-            // Products
-            Object.entries(data[key]).forEach(([innerKey, innerValue]) => {
-                if (innerValue == 1) {
-                    createCircle(innerKey, 0, 50);
-                }
-                setTimeout(() => {
-                    moveCircle(innerKey, 0, 50, 100, 0);
-                }, 100);
-            });
+    .then(data => {
+        var items = [[0, 100], [0, 100], [0, 100], [0, 100], [0, 100], [0, 100], [0, 100]];
+        
+        // Delay between "m" moments
+        let delay = 0;
+        
+        // Iterate over each "m" moment
+        Object.keys(data).forEach((moment, momentIndex) => {
+            // Pause between "m" moments
+            setTimeout(() => {
+                // Index for each product
+                var index = 0;
+                
+                // Iterate over products within each "m" moment
+                Object.entries(data[moment]).forEach(([product, value]) => {
+                    // Actions based on product value
+                    if (value === 1) {
+                        createCircle(product, 0, 100);
+                    } else if (value === 7) {
+                        removeCircle(product);
+                    } else {
+                        var prev_coordinates = items[index];
+                        var coordinates = moveDirection(0);
+                        moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
+                        items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
+                    }
+                    index++;
+                });
+            }, delay);
+            
+            // Increment delay for next "m" moment
+            delay += 1000; // Adjust as needed for the pause duration
         });
-
+    })
+    .catch(error => {
+        console.error('Error fetching or parsing JSON:', error);
     });
