@@ -263,9 +263,6 @@ function getCoordinatesFromStationID(id) {
 fetch('js/movements.json')
     .then(response => response.json())
     .then( data => {
-        console.log("Production line movements");
-        console.log(JSON.stringify(data));
-
         // Moments
         Object.keys(data).forEach(key => {
             // Products
