@@ -1,0 +1,65 @@
+{
+    "2024-04-23_02-52-30": [
+        {
+            "STATION": 1,
+            "PERIOD": "Week",
+            "PRODUCTION": 650,
+            "OCCUPANCY": 2575.376212067982,
+            "DOWNTIME": 419.3431559643059,
+            "FIX_TIME": 42.04589615936798,
+            "WAITING_TIME": 53.20000000000457,
+            "BOTTLENECK_TIME": 366.14315596430134
+        },
+        {
+            "STATION": 2,
+            "PERIOD": "Week",
+            "PRODUCTION": 546,
+            "OCCUPANCY": 2157.494183260927,
+            "DOWNTIME": 827.8083519826222,
+            "FIX_TIME": 43.41424459785983,
+            "WAITING_TIME": 563.7000000000439,
+            "BOTTLENECK_TIME": 264.1083519825783
+        },
+        {
+            "STATION": 3,
+            "PERIOD": "Week",
+            "PRODUCTION": 485,
+            "OCCUPANCY": 1907.6366841106294,
+            "DOWNTIME": 1022.5049971548332,
+            "FIX_TIME": 92.46652119398271,
+            "WAITING_TIME": 612.3000000000544,
+            "BOTTLENECK_TIME": 410.20499715477894
+        },
+        {
+            "STATION": 4,
+            "PERIOD": "Week",
+            "PRODUCTION": 457,
+            "OCCUPANCY": 1846.4849438741105,
+            "DOWNTIME": 1165.4822860673662,
+            "FIX_TIME": 41.24612759226887,
+            "WAITING_TIME": 671.6000000000588,
+            "BOTTLENECK_TIME": 493.8822860673073
+        },
+        {
+            "STATION": 5,
+            "PERIOD": "Week",
+            "PRODUCTION": 439,
+            "OCCUPANCY": 1757.1352970771443,
+            "DOWNTIME": 1186.849689356571,
+            "FIX_TIME": 105.81546651349205,
+            "WAITING_TIME": 627.2000000000439,
+            "BOTTLENECK_TIME": 559.649689356527
+        },
+        {
+            "STATION": 6,
+            "PERIOD": "Week",
+            "PRODUCTION": 186,
+            "REJECTED": 4,
+            "OCCUPANCY": 733.8465152217589,
+            "DOWNTIME": 2178.1000000001777,
+            "FIX_TIME": 91.6643767051247,
+            "WAITING_TIME": 2178.1000000001777,
+            "BOTTLENECK_TIME": 0.0
+        }
+    ]
+}

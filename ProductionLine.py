@@ -1,19 +1,22 @@
-# Authors: Carlos Manuel Velez, Miguel Angel Tovar, Andres Martínez Cabrera
+# Authors: Carlos Manuel Velez, Miguel Angel Tovar, Andres Martínez Cabrera, Francisco Díaz, Mario Rodríguez
 
 import simpy
 import random
-from collections import deque
 import pandas as pd
-from pymongo import MongoClient
 from datetime import datetime
+import json
 from flask import Flask, request
 from flask_cors import CORS
+import os
+import json
 
 # TO RUN 
 # python ProductionLine.py > output.txt
 
 app = Flask(__name__)
-CORS(app)
+#CORS(app)
+CORS(app, resources={r"/get_data": {"origins": "http://127.0.0.1:3000"}, r"/get_query": {"origins": "http://127.0.0.1:3000"}})
+
 class SimulationStop(Exception):
     pass
 
@@ -337,18 +340,11 @@ def run_production(period: int) -> pd.DataFrame:
 
     return production_resume
 
+
 @app.route('/get_data', methods=['GET'])
 def get_data():
 
     period = request.args.get('selected_period')
-    period="Week"
-
-    connection_string = "mongodb+srv://production:production@productionline.2brel6r.mongodb.net/" # a Andrés sí le sirve
-    # connection_string = "mongodb+srv://0234500:dQ90cqBgNLLY6PKg@productionline.2brel6r.mongodb.net/"
-    client = MongoClient(connection_string)
-
-    db = client["ProductionLine"]
-    collection = db["Runs"]
 
     data = run_production(period) # Define the period of the run and store the result in a variable
 
@@ -362,13 +358,40 @@ def get_data():
         stations_data.append(station_dict)
 
     now = datetime.now()
-    date = now.strftime("%Y-%m-%d_%H:%M:%S")
+    date = now.strftime("%Y-%m-%d_%H-%M-%S") # se cambiaron los : por -, por formato de nombre de archivo que no permite :
 
     data_dict[f"{date}"] = stations_data
-    collection.insert_one(data_dict)
 
-    return "Success"
+    file_path = os.path.join('data', f'{date}.json')
+    with open(file_path, 'w') as json_file:
+        json.dump(data_dict, json_file, indent=4)
+
+    return jsonify({"date":date})
+
+@app.route('/get_query', methods=['GET'])
+def get_query():
+    date = request.args.get('date')
+    value = 'PRODUCTION'
+    
+    file_path = os.path.join('data', f'{date}.json')
+    if not os.path.exists(file_path):
+        return jsonify({"error": "File not found"}), 404
+    
+    with open(file_path, 'r', encoding='utf-8') as json_file:
+        data = json.load(json_file)
+
+    query = dict()
+    # Convert the list of dictionaries into a single dictionary
+    try:
+        query[date] = data[date]
+        #result = {q['STATION']-1: q[value] for q in query}
+        return jsonify(query)
+    except:
+        print("There was an error")
+    
+    # Return the DataFrame
+    return jsonify({})
 
 # main()
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)

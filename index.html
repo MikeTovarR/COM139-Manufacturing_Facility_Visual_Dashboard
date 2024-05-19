@@ -1,0 +1,106 @@
+<!doctype html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="">
+    <title>Template</title>
+    <!-- Bootstrap -->
+    <link rel="stylesheet" href="css/bootstrap.min.css">
+    <!-- Custom styling -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+    <h1 class="text-center title">Factory Simulator</h1>
+
+    <!-- Drag and drop blocks -->
+<div class="container stage-area">
+    <div class="row">
+        <div class="col-md-2 stage" id="col1">
+            <div id="workstation1" class="block" draggable="false">Station 1</div>
+        </div>
+        <div class="col-md-2 stage" id="col2">
+            <div id="workstation2" class="block" draggable="true">Station 2</div>
+        </div>
+        <div class="col-md-2 stage" id="col3">
+            <div id="workstation3" class="block" draggable="true">Station 3</div>
+        </div>
+        <div class="col-md-2 stage" id="col4">
+            <div id="workstation4" class="block" draggable="true">Station 4</div>
+        </div>
+        <div class="col-md-2 stage" id="col5">
+            <div id="workstation5" class="block" draggable="true">Station 5</div>
+        </div>
+        <div class="col-md-2 stage" id="col6">
+            <div id="workstation6" class="block" draggable="false">Station 6</div>
+        </div>
+    </div>
+    <div class="row justify-content-around">
+        <div class="col-md-4"><btn class="btn btn-primary" id="calculate_button">Calculate</btn></div>
+        <!-- <div class="col-md-4"><btn class="btn btn-primary" id="read_button">Read Data</btn></div> -->
+    </div>
+</div>
+
+<!-- Bootstrap grid setup -->
+<div class="container graph mt-5">
+    <div class="row justify-content-around">
+        <div class="col-md-4 selection">
+            <label for="object-select" class="form-label">Select Date:</label>
+            <select id="object-select" class="form-select"></select>
+        </div>
+        <div class="col-md-4 selection">
+            <label for="graph-select" class="form-label">Select Value:</label>
+            <select id="graph-select" class="form-select">
+                <option value="PRODUCTION">Production</option>
+                <option value="OCCUPANCY">Occupancy</option>
+                <option value="DOWNTIME">Down Time</option>
+                <option value="FIX_TIME">Fix Time</option>
+                <option value="WAITING_TIME">Waiting Time</option>
+                <option value="BOTTLENECK_TIME">Bottleneck Time</option>
+            </select>
+        </div>
+        <div id="chart-area"></div>
+    </div>
+</div>
+
+
+<!-- <script>
+        var xhttp = new XMLHttpRequest();
+        var data;
+        
+        xhttp.onreadystatechange = function() { // Definir la función de callback que manejará la respuesta
+        
+            if (this.readyState == 4 && this.status == 200) { // Verificar si la solicitud se ha completado y la respuesta está lista
+            
+                data = this.responseText.split("\n");
+                //console.log(data);
+
+                // Get the select element
+                var selectElement = document.getElementById("object-select");
+        
+                // Iterate over the array and add options to the select element
+                for (var i = 0; i < data.length; i++) {
+                    if(data[i] != ""){ // When split at \n adds an empty file at the end, so here we discard it
+                        var option = document.createElement("option");
+                        option.text = data[i]; // The text of the option is the value at index i of the array
+                        option.value = i; // The value of the option can be the index in this case
+                        selectElement.appendChild(option);
+                    }
+                }
+            }
+        };
+        
+        xhttp.open("GET", "./data_base/filenames.txt", true); // Especificar el método HTTP y la URL del archivo JSON
+        xhttp.send(); // Enviar la solicitud
+
+</script> -->
+
+    
+
+<!-- External JS libraries -->
+<script src="js/d3.min.js"></script>
+<!-- Custom JS -->
+<script src="js/main.js"></script>
+
+</body>
+</html>
