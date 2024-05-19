@@ -283,7 +283,7 @@ function moveDirection(dir) {
 /*
     Use for testing purposes, change for call for mongodb calls for final function
 */
-fetch('js/movements.json')
+fetch('movements/move_2024-05-19_14-02-40.json')
     .then(response => response.json())
     .then(data => {
         var items = [[0, 100], [0, 100], [0, 100], [0, 100], [0, 100], [0, 100], [0, 100]];
