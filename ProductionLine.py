@@ -5,7 +5,7 @@ import random
 import pandas as pd
 from datetime import datetime
 import json
-from flask import Flask, request
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 import os
 import json
@@ -16,6 +16,12 @@ import json
 app = Flask(__name__)
 #CORS(app)
 CORS(app, resources={r"/get_data": {"origins": "http://127.0.0.1:3000"}, r"/get_query": {"origins": "http://127.0.0.1:3000"}})
+
+
+global_day = 0
+movements = {}
+moments = 0
+total_products = []
 
 class SimulationStop(Exception):
     pass
@@ -31,6 +37,7 @@ class Item:
         self.stages_passed = [0]
         self.stages_left = [1, 2, 3, 4, 5, 6]
         self.name = str(itemNo)
+        self.current_stage = 0
     def process(self, workstation_id : int) -> None:
         if workstation_id in self.stages_left:
             self.stages_left.remove(workstation_id)
@@ -91,6 +98,7 @@ class WorkStation:
             if self.id == 1:
                 self.itemNo += 1
                 self.item = Item(self.itemNo)
+                total_products.append(self.item)
 
             if not self.item:
                 yield self.env.timeout(0.1) # Simply yield without a value to wait for an item
@@ -112,10 +120,12 @@ class WorkStation:
                     yield self.env.timeout(abs(random.normalvariate(4)))
                     self.item.process(self.id)
                     self.raw_materials = self.raw_materials - 1
+                    self.item.current_stage = self.id
                     #print(f"Station {self.id} made item at {self.env.now:.4f} named {self.item.name}")
                     self.finished_items += 1
                     # Probability of product getting rejected
                     if self.id == 6:
+                        self.item.current_stage = 7
                         self.reject_product()
                     self.work_time = self.work_time + (self.env.now - start_time)
                     start_time = self.env.now
@@ -164,6 +174,8 @@ class WorkStation:
                                 self.bottleneck_time = self.env.now - start_time + self.bottleneck_time
                                 start_time = self.env.now
                                 continue
+                            print(f"Station running: {self.id}  Item: {self.item.name} Item stage: {self.item.current_stage}")
+
                             self.passed_item = True
                             station.item = self.item
                             self.item = None
@@ -189,11 +201,20 @@ class WorkStation:
             
             # Accident
             if self.accident():
-                #print(f"Oh no! There was an accident and the production was stopped by today.\nProduction stopped at {self.env.now: .2f}")
+                print(f"Oh no! There was an accident and the production was stopped by today.")
                 raise SimulationStop()
+            
+def save_moments(env, interval):
+    global moments
+    while True:
+        yield env.timeout(interval)
+        moments += 1
+        movements[f"m{moments}"] = {f"d{global_day}p{product.name}": product.current_stage for product in total_products}
+        #print(f"Time {env.now}: Updated movements - {movements}")
 
-def run_production(period: int) -> pd.DataFrame:
-    
+def run_production(period: str) -> pd.DataFrame:
+    global moments, global_day
+
     # Dict to define how many days will run each selected period
     periods = {"Day": 1, "Week": 7, "Month": 30, "Quarter": 120, "Year": 365}
 
@@ -206,9 +227,12 @@ def run_production(period: int) -> pd.DataFrame:
     total_waiting_time = [0, 0, 0, 0, 0, 0]
 
     days = periods[period]
+    moments_interval = 25
 
     for day in range(days):
         #print(f"++++++++ Day {day+1} ++++++++")
+        global_day += 1
+        moments = 0
 
         env = simpy.Environment()
         resource = simpy.Resource(env, 3)
@@ -226,6 +250,7 @@ def run_production(period: int) -> pd.DataFrame:
         station5.add_next([station4, station6])
 
         try: 
+            env.process(save_moments(env, moments_interval))
             env.run(until=500)
         except SimulationStop:
             print("Simulation stopped")
@@ -338,6 +363,7 @@ def run_production(period: int) -> pd.DataFrame:
             production_resume[i].loc[len(production_resume[i])] = [i+1, period, total_production[i], total_failure, total_occupancy[i], total_downtime[i], total_fix_time[i],
                                                             total_waiting_time[i], total_bottleneck_time[i]]
 
+    #print(movements)
     return production_resume
 
 
@@ -352,7 +378,7 @@ def get_data():
     stations_data = []
 
     for df in data:
-        print(df)
+        #print(df)
         station_dict = df.to_dict()
         station_dict = {key: value[0] for key, value in station_dict.items()}
         stations_data.append(station_dict)
@@ -362,9 +388,13 @@ def get_data():
 
     data_dict[f"{date}"] = stations_data
 
-    file_path = os.path.join('data', f'{date}.json')
-    with open(file_path, 'w') as json_file:
+    data_file_path = os.path.join('data', f'{date}.json')
+    with open(data_file_path, 'w') as json_file:
         json.dump(data_dict, json_file, indent=4)
+
+    movements_file_path = os.path.join('movements', f'move_{date}.json')
+    with open(movements_file_path, 'w') as json_file:
+        json.dump(movements, json_file, indent=4)
 
     return jsonify({"date":date})
 
