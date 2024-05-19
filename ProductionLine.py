@@ -15,7 +15,8 @@ import json
 
 app = Flask(__name__)
 #CORS(app)
-CORS(app, resources={r"/get_data": {"origins": "http://127.0.0.1:3000"}, r"/get_query": {"origins": "http://127.0.0.1:3000"}})
+CORS(app, resources={r"/get_data": {"origins": "http://127.0.0.1:3000"}, r"/get_query": {"origins": "http://127.0.0.1:3000"},
+                     r"/get_moments": {"origins": "http://127.0.0.1:3000"}})
 
 
 global_day = 0
@@ -174,7 +175,7 @@ class WorkStation:
                                 self.bottleneck_time = self.env.now - start_time + self.bottleneck_time
                                 start_time = self.env.now
                                 continue
-                            print(f"Station running: {self.id}  Item: {self.item.name} Item stage: {self.item.current_stage}")
+                            #print(f"Station running: {self.id}  Item: {self.item.name} Item stage: {self.item.current_stage}")
 
                             self.passed_item = True
                             station.item = self.item
@@ -401,9 +402,31 @@ def get_data():
 @app.route('/get_query', methods=['GET'])
 def get_query():
     date = request.args.get('date')
-    value = 'PRODUCTION'
     
     file_path = os.path.join('data', f'{date}.json')
+    if not os.path.exists(file_path):
+        return jsonify({"error": "File not found"}), 404
+    
+    with open(file_path, 'r', encoding='utf-8') as json_file:
+        data = json.load(json_file)
+
+    query = dict()
+    # Convert the list of dictionaries into a single dictionary
+    try:
+        query[date] = data[date]
+        #result = {q['STATION']-1: q[value] for q in query}
+        return jsonify(query)
+    except:
+        print("There was an error")
+    
+    # Return the DataFrame
+    return jsonify({})
+
+@app.route('/get_moments', methods=['GET'])
+def get_moments():
+    date = request.args.get('date')
+    
+    file_path = os.path.join('movements', f'{date}.json')
     if not os.path.exists(file_path):
         return jsonify({"error": "File not found"}), 404
     
