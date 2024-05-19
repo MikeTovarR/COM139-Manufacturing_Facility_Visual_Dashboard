@@ -1,4 +1,4 @@
-# Authors: Carlos Manuel Velez, Miguel Angel Tovar, Andres Martínez Cabrera
+# Authors: Carlos Manuel Velez, Miguel Angel Tovar, Andres Martínez Cabrera, Francisco Díaz, Mario Rodríguez
 
 import simpy
 import random
@@ -8,13 +8,15 @@ import json
 from flask import Flask, request
 from flask_cors import CORS
 import os
-
+import json
 
 # TO RUN 
 # python ProductionLine.py > output.txt
 
 app = Flask(__name__)
-CORS(app)
+#CORS(app)
+CORS(app, resources={r"/get_data": {"origins": "http://127.0.0.1:3000"}, r"/get_query": {"origins": "http://127.0.0.1:3000"}})
+
 class SimulationStop(Exception):
     pass
 
@@ -342,7 +344,7 @@ def run_production(period: int) -> pd.DataFrame:
 @app.route('/get_data', methods=['GET'])
 def get_data():
 
-    period="Week"
+    period = request.args.get('selected_period')
 
     data = run_production(period) # Define the period of the run and store the result in a variable
 
@@ -360,25 +362,36 @@ def get_data():
 
     data_dict[f"{date}"] = stations_data
 
-    json_file = f"data_base/{date}.json"
-    json_data = json.dumps(data_dict, indent=4)
-    with open(json_file, "w") as file:
-        file.write(json_data)
+    file_path = os.path.join('data', f'{date}.json')
+    with open(file_path, 'w') as json_file:
+        json.dump(data_dict, json_file, indent=4)
 
-    get_jsons_list()
+    return jsonify({"date":date})
 
-    return "Success"
+@app.route('/get_query', methods=['GET'])
+def get_query():
+    date = request.args.get('date')
+    value = 'PRODUCTION'
+    
+    file_path = os.path.join('data', f'{date}.json')
+    if not os.path.exists(file_path):
+        return jsonify({"error": "File not found"}), 404
+    
+    with open(file_path, 'r', encoding='utf-8') as json_file:
+        data = json.load(json_file)
 
-def get_jsons_list():
-    all_files = os.listdir("data_base")
-    json_files = []
-    for file in all_files:
-        if file[19:] == ".json":
-            json_files.append(file)
+    query = dict()
+    # Convert the list of dictionaries into a single dictionary
+    try:
+        query[date] = data[date]
+        #result = {q['STATION']-1: q[value] for q in query}
+        return jsonify(query)
+    except:
+        print("There was an error")
+    
+    # Return the DataFrame
+    return jsonify({})
 
-    with open("data_base/filenames.txt", "w") as file:
-        for json_file in json_files:
-            file.write(json_file[0:19] + "\n")
-
+# main()
 if __name__ == '__main__':
-    app.run(port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True)
