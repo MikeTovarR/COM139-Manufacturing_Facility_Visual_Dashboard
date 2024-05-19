@@ -16,7 +16,8 @@ const combobox = document.getElementById("object-select");
 var data_selection = document.getElementById("graph-select");
 var period_selection = document.getElementById("period-select");
 
-var selectedKey;
+
+var selectedKey = combobox.value;
 
 var graphData;
 
@@ -51,6 +52,7 @@ combobox.addEventListener("change", function () {
     var selectedOptionIndex = this.value; // Obtener el índice de la opción seleccionada
     selectedKey = this.options[selectedOptionIndex].text; // Obtener el texto de la opción seleccionada
     read(selectedKey);
+    draw_circles(selectedKey);
 });
 
 
@@ -283,7 +285,9 @@ function moveDirection(dir) {
 /*
     Use for testing purposes, change for call for mongodb calls for final function
 */
-fetch('movements/move_2024-05-19_14-02-40.json')
+function draw_circles(key){
+    //fetch("http://127.0.0.1:5000/get_moments?date=move_" + key) // This line read the according movement file from the server (DON'T WORK)
+    fetch('js/movements.json') // Carlitos's original line, route to his specific file
     .then(response => response.json())
     .then(data => {
         var items = [[0, 100], [0, 100], [0, 100], [0, 100], [0, 100], [0, 100], [0, 100]];
@@ -366,3 +370,4 @@ fetch('movements/move_2024-05-19_14-02-40.json')
     .catch(error => {
         console.error('Error fetching or parsing JSON:', error);
     });
+}
