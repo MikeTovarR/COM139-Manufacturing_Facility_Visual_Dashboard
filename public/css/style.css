@@ -1,0 +1,61 @@
+svg {
+	margin: 20px;
+	width: fit-content;
+	height: fit-content;
+}
+
+
+.graph {
+	margin-top: 5rem;
+	border-style: solid;
+	border-color: black;
+	border-radius: 5px;
+	border-width: 0.1rem;
+}
+
+.selection {
+	bottom: 1rem;
+	left: 0.5rem;
+	background-color: white;
+	width: max-content;
+}
+
+.stage {
+	background-color: blueviolet;
+    border: 1px solid #ccc;
+	margin-bottom: 5rem;
+	min-height: 2rem;
+}
+
+.block {
+    background-color: #f0f0f0;
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 5px 0;
+	text-align: center;
+}
+
+.dragging {
+	opacity: 0.5;
+}
+
+.dropzone {
+	width: 200px;
+	height: 20px;
+	background: blueviolet;
+	margin: 10px;
+	padding: 10px;
+}
+  
+.stage.dragover {
+	background-color: purple;
+}
+
+.circle-item {
+	width: 50px;
+	height: 50px;
+	background-color: red;
+	border-radius: 50%;
+	position: absolute;
+	z-index: 100;
+}
