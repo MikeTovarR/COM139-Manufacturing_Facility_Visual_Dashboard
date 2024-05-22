@@ -218,6 +218,7 @@ data_selection.addEventListener("change", function () {
 
 function createCircle(id, x, y) {
     const circle = document.createElement('div');
+    console.log(id);
     draw_area.appendChild(circle);
     circle.className = 'circle-item';
     circle.id = id;
@@ -286,15 +287,16 @@ function moveDirection(dir) {
     Use for testing purposes, change for call for mongodb calls for final function
 */
 function draw_circles(key){
-    //fetch("http://127.0.0.1:5000/get_moments?date=move_" + key) // This line read the according movement file from the server (DON'T WORK)
-    fetch('js/movements.json') // Carlitos's original line, route to his specific file
+    fetch("http://127.0.0.1:5000/get_moments?date=" + key) // This line read the according movement file from the server (DON'T WORK)
+    //fetch('js/movements.json') // Carlitos's original line, route to his specific file
     .then(response => response.json())
     .then(data => {
         var items = [[0, 100], [0, 100], [0, 100], [0, 100], [0, 100], [0, 100], [0, 100]];
-        
+        const createdProducts = [];
         // Delay between "m" moments
         let delay = 0;
         
+        //console.log(JSON.stringify(data));
         // Iterate over each "m" moment
         Object.keys(data).forEach((moment, momentIndex) => {
             // Pause between "m" moments
@@ -304,20 +306,26 @@ function draw_circles(key){
                 
                 // Iterate over products within each "m" moment
                 Object.entries(data[moment]).forEach(([product, value]) => {
+                    console.log(moment);
                     // Actions based on product value
-                    if (value === 1) {
-                        createCircle(product, 0, 100);
-                    } else if (value === 7) {
-                        removeCircle(product);
-                        index--;
-                        for (var i = 0; i < items.length - 1; i++) {
-                            items[i] = items[i + 1];
+                    if (value === 1 || value === 0) {
+                        if (!createdProducts.includes(product)) {
+                            createCircle(product, 0, 100);
+                            createdProducts.push(product);
                         }
-                        items[items.length - 1] = [0, 100];
+                        
+                    } else if (value === 7) {
+                        // removeCircle(product);
+                        // index--;
+                        // for (var i = 0; i < items.length - 1; i++) {
+                        //     items[i] = items[i + 1];
+                        // }
+                         items[items.length - 1] = [0, 100];
+                        
                     } else {
                         if (value === 4) {
                             var prev_coordinates = items[index];
-                            console.log(prev_coordinates);
+                            //console.log(prev_coordinates);
                             if(prev_coordinates[0] == 200 && prev_coordinates[1] == 100) {
                                 var coordinates = moveDirection(1);
                                 moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);

@@ -210,7 +210,7 @@ def save_moments(env, interval):
     while True:
         yield env.timeout(interval)
         moments += 1
-        movements[f"m{moments}"] = {f"d{global_day}p{product.name}": product.current_stage for product in total_products}
+        movements[f"m{str(moments).zfill(3)}"] = {f"d{global_day}p{product.name}": product.current_stage for product in total_products}
         #print(f"Time {env.now}: Updated movements - {movements}")
 
 def run_production(period: str) -> pd.DataFrame:
@@ -228,7 +228,7 @@ def run_production(period: str) -> pd.DataFrame:
     total_waiting_time = [0, 0, 0, 0, 0, 0]
 
     days = periods[period]
-    moments_interval = 25
+    moments_interval = 1
 
     for day in range(days):
         #print(f"++++++++ Day {day+1} ++++++++")
@@ -426,21 +426,20 @@ def get_query():
 def get_moments():
     date = request.args.get('date')
     
-    file_path = os.path.join('movements', f'{date}.json')
+    file_path = os.path.join('movements', f'move_{date}.json')
     if not os.path.exists(file_path):
         return jsonify({"error": "File not found"}), 404
     
     with open(file_path, 'r', encoding='utf-8') as json_file:
         data = json.load(json_file)
 
-    query = dict()
+    query = {}
     # Convert the list of dictionaries into a single dictionary
     try:
-        query[date] = data[date]
         #result = {q['STATION']-1: q[value] for q in query}
-        return jsonify(query)
+        return jsonify(data)
     except:
-        print("There was an error")
+        print("There was an error with the moments")
     
     # Return the DataFrame
     return jsonify({})
