@@ -227,6 +227,7 @@ function createCircle(id, x, y) {
 
 function moveCircle(id, x1, y1, x2, y2) {
     const circle = document.getElementById(id);
+    console.log(id);
     if (circle) {
         circle.style.left = `${x1}px`;
         circle.style.top = `${y1}px`;
@@ -286,8 +287,8 @@ function moveDirection(dir) {
     Use for testing purposes, change for call for mongodb calls for final function
 */
 function draw_circles(key){
-    //fetch("http://127.0.0.1:5000/get_moments?date=move_" + key) // This line read the according movement file from the server (DON'T WORK)
-    fetch('js/movements.json') // Carlitos's original line, route to his specific file
+    fetch("http://127.0.0.1:5000/get_moments?date=" + key) // This line read the according movement file from the server (DON'T WORK)
+    //fetch('js/movements.json') // Carlitos's original line, route to his specific file
     .then(response => response.json())
     .then(data => {
         var items = [[0, 100], [0, 100], [0, 100], [0, 100], [0, 100], [0, 100], [0, 100]];
@@ -317,7 +318,7 @@ function draw_circles(key){
                     } else {
                         if (value === 4) {
                             var prev_coordinates = items[index];
-                            console.log(prev_coordinates);
+                            //console.log(prev_coordinates);
                             if(prev_coordinates[0] == 200 && prev_coordinates[1] == 100) {
                                 var coordinates = moveDirection(1);
                                 moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);

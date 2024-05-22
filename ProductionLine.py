@@ -426,21 +426,20 @@ def get_query():
 def get_moments():
     date = request.args.get('date')
     
-    file_path = os.path.join('movements', f'{date}.json')
+    file_path = os.path.join('movements', f'move_{date}.json')
     if not os.path.exists(file_path):
         return jsonify({"error": "File not found"}), 404
     
     with open(file_path, 'r', encoding='utf-8') as json_file:
         data = json.load(json_file)
 
-    query = dict()
+    query = {}
     # Convert the list of dictionaries into a single dictionary
     try:
-        query[date] = data[date]
         #result = {q['STATION']-1: q[value] for q in query}
-        return jsonify(query)
+        return jsonify(data)
     except:
-        print("There was an error")
+        print("There was an error with the moments")
     
     # Return the DataFrame
     return jsonify({})
