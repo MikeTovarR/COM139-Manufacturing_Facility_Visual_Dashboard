@@ -218,6 +218,7 @@ data_selection.addEventListener("change", function () {
 
 function createCircle(id, x, y) {
     const circle = document.createElement('div');
+    console.log(id);
     draw_area.appendChild(circle);
     circle.className = 'circle-item';
     circle.id = id;
@@ -227,7 +228,6 @@ function createCircle(id, x, y) {
 
 function moveCircle(id, x1, y1, x2, y2) {
     const circle = document.getElementById(id);
-    console.log(id);
     if (circle) {
         circle.style.left = `${x1}px`;
         circle.style.top = `${y1}px`;
@@ -292,10 +292,11 @@ function draw_circles(key){
     .then(response => response.json())
     .then(data => {
         var items = [[0, 100], [0, 100], [0, 100], [0, 100], [0, 100], [0, 100], [0, 100]];
-        
+        const createdProducts = [];
         // Delay between "m" moments
         let delay = 0;
         
+        //console.log(JSON.stringify(data));
         // Iterate over each "m" moment
         Object.keys(data).forEach((moment, momentIndex) => {
             // Pause between "m" moments
@@ -305,16 +306,22 @@ function draw_circles(key){
                 
                 // Iterate over products within each "m" moment
                 Object.entries(data[moment]).forEach(([product, value]) => {
+                    console.log(moment);
                     // Actions based on product value
-                    if (value === 1) {
-                        createCircle(product, 0, 100);
-                    } else if (value === 7) {
-                        removeCircle(product);
-                        index--;
-                        for (var i = 0; i < items.length - 1; i++) {
-                            items[i] = items[i + 1];
+                    if (value === 1 || value === 0) {
+                        if (!createdProducts.includes(product)) {
+                            createCircle(product, 0, 100);
+                            createdProducts.push(product);
                         }
-                        items[items.length - 1] = [0, 100];
+                        
+                    } else if (value === 7) {
+                        // removeCircle(product);
+                        // index--;
+                        // for (var i = 0; i < items.length - 1; i++) {
+                        //     items[i] = items[i + 1];
+                        // }
+                         items[items.length - 1] = [0, 100];
+                        
                     } else {
                         if (value === 4) {
                             var prev_coordinates = items[index];

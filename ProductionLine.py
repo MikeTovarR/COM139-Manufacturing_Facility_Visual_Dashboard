@@ -210,7 +210,7 @@ def save_moments(env, interval):
     while True:
         yield env.timeout(interval)
         moments += 1
-        movements[f"m{moments}"] = {f"d{global_day}p{product.name}": product.current_stage for product in total_products}
+        movements[f"m{str(moments).zfill(3)}"] = {f"d{global_day}p{product.name}": product.current_stage for product in total_products}
         #print(f"Time {env.now}: Updated movements - {movements}")
 
 def run_production(period: str) -> pd.DataFrame:
@@ -228,7 +228,7 @@ def run_production(period: str) -> pd.DataFrame:
     total_waiting_time = [0, 0, 0, 0, 0, 0]
 
     days = periods[period]
-    moments_interval = 25
+    moments_interval = 1
 
     for day in range(days):
         #print(f"++++++++ Day {day+1} ++++++++")
