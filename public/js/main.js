@@ -291,7 +291,10 @@ function draw_circles(key){
     //fetch('js/movements.json') // Carlitos's original line, route to his specific file
     .then(response => response.json())
     .then(data => {
-        var items = [[0, 100], [0, 100], [0, 100], [0, 100], [0, 100], [0, 100], [0, 100]];
+        var items = [];
+        for (var i = 0; i < 200; i++) {
+            items.push([0, 100]);
+        }
         const createdProducts = [];
         // Delay between "m" moments
         let delay = 0;
