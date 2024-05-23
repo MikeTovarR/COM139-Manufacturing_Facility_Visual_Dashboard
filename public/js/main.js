@@ -292,7 +292,7 @@ function draw_circles(key){
     .then(response => response.json())
     .then(data => {
         var items = [];
-        for (var i = 0; i < 200; i++) {
+        for (var i = 0; i < 1000; i++) {
             items.push([0, 100]);
         }
         const createdProducts = [];
@@ -323,7 +323,7 @@ function draw_circles(key){
                         // for (var i = 0; i < items.length - 1; i++) {
                         //     items[i] = items[i + 1];
                         // }
-                         items[items.length - 1] = [0, 100];
+                        //  items[items.length - 1] = [0, 100];
                         
                     } else {
                         // Check if stage is the same from previous moment
