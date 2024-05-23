@@ -263,8 +263,8 @@ function getCoordinatesFromStationID(id) {
         case 4: return [300, 0];
         case 5: return [400, 200];
         case 6: return [400, 100];
+        default: return [-1, -1];
     }
-    return [-1, -1];
 }
 
 // Get translate coordinates by directions
@@ -323,49 +323,71 @@ function draw_circles(key){
                          items[items.length - 1] = [0, 100];
                         
                     } else {
+                        // Check if stage is the same from previous moment
                         if (value === 4) {
                             var prev_coordinates = items[index];
-                            //console.log(prev_coordinates);
-                            if(prev_coordinates[0] == 200 && prev_coordinates[1] == 100) {
-                                var coordinates = moveDirection(1);
-                                moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
-                                items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
-                            } else {
-                                var coordinates = moveDirection(3);
-                                moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
-                                items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
+                            if (!(prev_coordinates[0] === 300 && prev_coordinates[1] === 0)){
+                                //console.log(prev_coordinates);
+                                if(prev_coordinates[0] == 200 && prev_coordinates[1] == 100) {
+                                    var coordinates = moveDirection(1);
+                                    moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
+                                    items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
+                                } else {
+                                    var coordinates = moveDirection(3);
+                                    moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
+                                    items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
+                                }
                             }
                         }
                         else if (value === 5) {
                             var prev_coordinates = items[index];
-                            if(prev_coordinates[0] == 200 && prev_coordinates == 100) {
-                                var coordinates = moveDirection(2);
-                                moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
-                                items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
-                            } else {
-                                var coordinates = moveDirection(4);
-                                moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
-                                items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
+                            if (!(prev_coordinates[0] === 300 && prev_coordinates[1] === 2000))
+                            {
+                                if(prev_coordinates[0] == 200 && prev_coordinates == 100) {
+                                    var coordinates = moveDirection(2);
+                                    moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
+                                    items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
+                                } else {
+                                    var coordinates = moveDirection(4);
+                                    moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
+                                    items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
+                                }
                             }
                         }
                         else if (value === 6) {
                             var prev_coordinates = items[index];
-                            if(prev_coordinates == [300, 0]) {
-                                var coordinates = moveDirection(2);
-                                moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
-                                items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
-                            } else {
-                                var coordinates = moveDirection(1);
-                                moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
-                                items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
+                            if (!(prev_coordinates[0] === 400 && prev_coordinates[1] === 100))
+                            {
+                                if(prev_coordinates == [300, 0]) {
+                                    var coordinates = moveDirection(2);
+                                    moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
+                                    items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
+                                } else {
+                                    var coordinates = moveDirection(1);
+                                    moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
+                                    items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
+                                }
                             }
                         }
                         else {
                             var prev_coordinates = items[index];
-                            var coordinates = moveDirection(0);
-                            moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
-                            items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
-                        }
+                            var state = true;
+                            switch(value){
+                                case 2:
+                                    if (prev_coordinates[0] === 100 && prev_coordinates[1] === 100)
+                                        state = false;
+                                    break;
+                                case 3:
+                                    if (prev_coordinates[0] === 200 && prev_coordinates[1] === 100)
+                                        state = false;
+                                    break;
+                                }
+                                if (state){
+                                    var coordinates = moveDirection(0);
+                                    moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
+                                    items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
+                                }
+                            }
                     }
                     index++;
                 });
