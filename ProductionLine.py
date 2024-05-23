@@ -106,6 +106,7 @@ class WorkStation:
                 continue
                 
             if self.item:
+                self.item.current_stage = self.id
                 if abs(random.normalvariate()) <= self.fail_rate:
                     self.status = False
                     # print(f"Station {self.id} Failure")
@@ -125,8 +126,8 @@ class WorkStation:
                     self.finished_items += 1
                     # Probability of product getting rejected
                     if self.id == 6:
-                        self.reject_product()
                         self.item.current_stage = 7
+                        self.reject_product()
                     self.work_time = self.work_time + (self.env.now - start_time)
                     start_time = self.env.now
                     # The station finshed with the item
@@ -148,8 +149,6 @@ class WorkStation:
                                     flagItem = station.item
                                     station.item = self.item
                                     self.item = flagItem
-                                    self.item.current_stage = self.id
-                                    station.item.current_stage = station.id
                                     # print(f"Station {self.id} passed item to {station.id} at {self.env.now:.4f}")
                                     # print(f"Station {station.id} passed item to {self.id} at {self.env.now:.4f}")
                                     # The station is empty
@@ -180,7 +179,6 @@ class WorkStation:
 
                             self.passed_item = True
                             station.item = self.item
-                            station.item.current_stage = station.id
                             self.item = None
                             #print(f"Station {self.id} passed item to {station.id} at {self.env.now:.4f}")
                             # The station is empty
