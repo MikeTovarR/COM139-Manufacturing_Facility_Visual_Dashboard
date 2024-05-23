@@ -40,4 +40,4 @@ py ProductionLine.py
 node app.js
 ```
 
-The program should run in http://localhost:3000
+The program should run writting "http://127.0.0.1:3000/" in your browser
