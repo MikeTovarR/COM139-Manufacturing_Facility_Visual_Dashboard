@@ -335,7 +335,7 @@ function draw_circles(key){
                                     var coordinates = moveDirection(1);
                                     moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
                                     items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
-                                } else {
+                                } else if(prev_coordinates[0] == 300 && prev_coordinates[1] == 200){
                                     var coordinates = moveDirection(3);
                                     moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
                                     items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
@@ -350,7 +350,7 @@ function draw_circles(key){
                                     var coordinates = moveDirection(2);
                                     moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
                                     items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
-                                } else {
+                                } else if(prev_coordinates[0] == 300 && prev_coordinates[1] == 0){
                                     var coordinates = moveDirection(4);
                                     moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
                                     items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
