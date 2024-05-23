@@ -106,6 +106,7 @@ class WorkStation:
                 continue
                 
             if self.item:
+                self.item.current_stage = self.id
                 if abs(random.normalvariate()) <= self.fail_rate:
                     self.status = False
                     # print(f"Station {self.id} Failure")
@@ -121,13 +122,12 @@ class WorkStation:
                     yield self.env.timeout(abs(random.normalvariate(4)))
                     self.item.process(self.id)
                     self.raw_materials = self.raw_materials - 1
-                    self.item.current_stage = self.id
                     #print(f"Station {self.id} made item at {self.env.now:.4f} named {self.item.name}")
                     self.finished_items += 1
                     # Probability of product getting rejected
                     if self.id == 6:
-                        self.item.current_stage = 7
                         self.reject_product()
+                        self.item.current_stage = 7
                     self.work_time = self.work_time + (self.env.now - start_time)
                     start_time = self.env.now
                     # The station finshed with the item
