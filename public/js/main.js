@@ -341,7 +341,7 @@ function draw_circles(key){
                         }
                         else if (value === 5) {
                             var prev_coordinates = items[index];
-                            if (!(prev_coordinates[0] === 300 && prev_coordinates[1] === 2000))
+                            if (!(prev_coordinates[0] === 300 && prev_coordinates[1] === 200))
                             {
                                 if(prev_coordinates[0] == 200 && prev_coordinates == 100) {
                                     var coordinates = moveDirection(2);
@@ -382,12 +382,12 @@ function draw_circles(key){
                                         state = false;
                                     break;
                                 }
-                                if (state){
-                                    var coordinates = moveDirection(0);
-                                    moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
-                                    items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
-                                }
+                            if (state){
+                                var coordinates = moveDirection(0);
+                                moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
+                                items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
                             }
+                        }
                     }
                     index++;
                 });
