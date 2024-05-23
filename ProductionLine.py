@@ -38,7 +38,7 @@ class Item:
         self.stages_passed = [0]
         self.stages_left = [1, 2, 3, 4, 5, 6]
         self.name = str(itemNo)
-        self.current_stage = 0
+        self.current_stage = 1
     def process(self, workstation_id : int) -> None:
         if workstation_id in self.stages_left:
             self.stages_left.remove(workstation_id)
