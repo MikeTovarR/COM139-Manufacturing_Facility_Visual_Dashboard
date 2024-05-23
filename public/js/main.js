@@ -263,8 +263,8 @@ function getCoordinatesFromStationID(id) {
         case 4: return [300, 0];
         case 5: return [400, 200];
         case 6: return [400, 100];
+        default: return [-1, -1];
     }
-    return [-1, -1];
 }
 
 // Get translate coordinates by directions
@@ -291,7 +291,10 @@ function draw_circles(key){
     //fetch('js/movements.json') // Carlitos's original line, route to his specific file
     .then(response => response.json())
     .then(data => {
-        var items = [[0, 100], [0, 100], [0, 100], [0, 100], [0, 100], [0, 100], [0, 100]];
+        var items = [];
+        for (var i = 0; i < 1000; i++) {
+            items.push([100, 300]);
+        }
         const createdProducts = [];
         // Delay between "m" moments
         let delay = 0;
@@ -308,60 +311,70 @@ function draw_circles(key){
                 Object.entries(data[moment]).forEach(([product, value]) => {
                     console.log(moment);
                     // Actions based on product value
-                    if (value === 1 || value === 0) {
+                    if (value === 1) {
                         if (!createdProducts.includes(product)) {
-                            createCircle(product, 0, 100);
+                            createCircle(product, 100, 300);
                             createdProducts.push(product);
                         }
                         
-                    } else if (value === 7) {
+                    } else if (value === 6) {
                         // removeCircle(product);
                         // index--;
                         // for (var i = 0; i < items.length - 1; i++) {
                         //     items[i] = items[i + 1];
                         // }
-                         items[items.length - 1] = [0, 100];
+                        //  items[items.length - 1] = [0, 100];
                         
-                    } else {
-                        if (value === 4) {
-                            var prev_coordinates = items[index];
-                            //console.log(prev_coordinates);
-                            if(prev_coordinates[0] == 200 && prev_coordinates[1] == 100) {
-                                var coordinates = moveDirection(1);
-                                moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
-                                items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
-                            } else {
-                                var coordinates = moveDirection(3);
-                                moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
-                                items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
-                            }
+                    } else if (value === 4) {
+                        var prev_coordinates = items[index];
+                        //console.log(prev_coordinates);
+                        if(prev_coordinates[0] == 300 && prev_coordinates[1] == 300) {
+                            var coordinates = moveDirection(1);
+                            moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
+                            items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
+                        } else if(prev_coordinates[0] == 400 && prev_coordinates[1] == 400){
+                            var coordinates = moveDirection(3);
+                            moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
+                            items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
                         }
-                        else if (value === 5) {
-                            var prev_coordinates = items[index];
-                            if(prev_coordinates[0] == 200 && prev_coordinates == 100) {
-                                var coordinates = moveDirection(2);
-                                moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
-                                items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
-                            } else {
-                                var coordinates = moveDirection(4);
-                                moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
-                                items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
-                            }
+                    }
+                    else if (value === 5) {
+                        var prev_coordinates = items[index];
+                        if(prev_coordinates[0] == 300 && prev_coordinates == 300) {
+                            var coordinates = moveDirection(2);
+                            moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
+                            items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
+                        } else if(prev_coordinates[0] == 400 && prev_coordinates[1] == 200){
+                            var coordinates = moveDirection(4);
+                            moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
+                            items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
                         }
-                        else if (value === 6) {
-                            var prev_coordinates = items[index];
-                            if(prev_coordinates == [300, 0]) {
-                                var coordinates = moveDirection(2);
-                                moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
-                                items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
-                            } else {
-                                var coordinates = moveDirection(1);
-                                moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
-                                items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
-                            }
+                    }
+                    else if (value === 7) {
+                        var prev_coordinates = items[index];
+                        if(prev_coordinates[0] == 400 && prev_coordinates[1] == 200) {
+                            var coordinates = moveDirection(2);
+                            moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
+                            items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
+                        } else if(prev_coordinates[0] == 400 && prev_coordinates[1] == 400){
+                            var coordinates = moveDirection(1);
+                            moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
+                            items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
                         }
-                        else {
-                            var prev_coordinates = items[index];
+                    }
+                    else if (value === 2){
+                        var prev_coordinates = items[index];
+                        
+                        if(prev_coordinates[0] == 100 && prev_coordinates[1] == 300){
+                            var coordinates = moveDirection(0);
+                            moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
+                            items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];
+                        }
+                    }
+                    else if (value === 3){
+                        var prev_coordinates = items[index];
+                        
+                        if(prev_coordinates[0] == 200 && prev_coordinates[1] == 300){
                             var coordinates = moveDirection(0);
                             moveCircle(product, prev_coordinates[0], prev_coordinates[1], coordinates[0], coordinates[1]);
                             items[index] = [prev_coordinates[0] + coordinates[0], prev_coordinates[1] + coordinates[1]];

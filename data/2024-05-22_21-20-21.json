@@ -1,0 +1,65 @@
+{
+    "2024-05-22_21-20-21": [
+        {
+            "STATION": 1,
+            "PERIOD": "Day",
+            "PRODUCTION": 104,
+            "OCCUPANCY": 417.561378790242,
+            "DOWNTIME": 66.26023076812727,
+            "FIX_TIME": 9.07780653221442,
+            "WAITING_TIME": 8.100000000000644,
+            "BOTTLENECK_TIME": 58.160230768126624
+        },
+        {
+            "STATION": 2,
+            "PERIOD": "Day",
+            "PRODUCTION": 80,
+            "OCCUPANCY": 341.079406604444,
+            "DOWNTIME": 127.25608751156993,
+            "FIX_TIME": 15.178375185493138,
+            "WAITING_TIME": 89.50000000000814,
+            "BOTTLENECK_TIME": 37.75608751156179
+        },
+        {
+            "STATION": 3,
+            "PERIOD": "Day",
+            "PRODUCTION": 71,
+            "OCCUPANCY": 299.005539414884,
+            "DOWNTIME": 173.1181864662019,
+            "FIX_TIME": 22.393002257994677,
+            "WAITING_TIME": 102.5000000000094,
+            "BOTTLENECK_TIME": 70.61818646619251
+        },
+        {
+            "STATION": 4,
+            "PERIOD": "Day",
+            "PRODUCTION": 73,
+            "OCCUPANCY": 290.9557913577798,
+            "DOWNTIME": 198.5265286662888,
+            "FIX_TIME": 0.868318987799853,
+            "WAITING_TIME": 118.40000000000734,
+            "BOTTLENECK_TIME": 80.12652866628149
+        },
+        {
+            "STATION": 5,
+            "PERIOD": "Day",
+            "PRODUCTION": 76,
+            "OCCUPANCY": 300.8950822945925,
+            "DOWNTIME": 183.09871290729544,
+            "FIX_TIME": 7.771997584946746,
+            "WAITING_TIME": 86.50000000000676,
+            "BOTTLENECK_TIME": 96.59871290728867
+        },
+        {
+            "STATION": 6,
+            "PERIOD": "Day",
+            "PRODUCTION": 29,
+            "REJECTED": 1,
+            "OCCUPANCY": 111.98836244113365,
+            "DOWNTIME": 355.70000000003324,
+            "FIX_TIME": 29.22468085411984,
+            "WAITING_TIME": 355.70000000003324,
+            "BOTTLENECK_TIME": 0.0
+        }
+    ]
+}

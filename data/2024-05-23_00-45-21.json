@@ -1,0 +1,65 @@
+{
+    "2024-05-23_00-45-21": [
+        {
+            "STATION": 1,
+            "PERIOD": "Day",
+            "PRODUCTION": 107,
+            "OCCUPANCY": 416.8193593819547,
+            "DOWNTIME": 62.063378521611405,
+            "FIX_TIME": 9.084229324110943,
+            "WAITING_TIME": 8.600000000000804,
+            "BOTTLENECK_TIME": 53.4633785216106
+        },
+        {
+            "STATION": 2,
+            "PERIOD": "Day",
+            "PRODUCTION": 92,
+            "OCCUPANCY": 351.0971821881732,
+            "DOWNTIME": 124.49879382266141,
+            "FIX_TIME": 14.512777595232386,
+            "WAITING_TIME": 79.70000000000682,
+            "BOTTLENECK_TIME": 44.79879382265459
+        },
+        {
+            "STATION": 3,
+            "PERIOD": "Day",
+            "PRODUCTION": 78,
+            "OCCUPANCY": 301.51323472539787,
+            "DOWNTIME": 168.8570943375006,
+            "FIX_TIME": 10.286852107760769,
+            "WAITING_TIME": 103.70000000000958,
+            "BOTTLENECK_TIME": 65.15709433749102
+        },
+        {
+            "STATION": 4,
+            "PERIOD": "Day",
+            "PRODUCTION": 78,
+            "OCCUPANCY": 304.21684413870094,
+            "DOWNTIME": 175.45234097420894,
+            "FIX_TIME": 7.690198161128976,
+            "WAITING_TIME": 89.10000000000753,
+            "BOTTLENECK_TIME": 86.35234097420143
+        },
+        {
+            "STATION": 5,
+            "PERIOD": "Day",
+            "PRODUCTION": 76,
+            "OCCUPANCY": 287.9020207590179,
+            "DOWNTIME": 197.26747185609085,
+            "FIX_TIME": 0.7572325338741983,
+            "WAITING_TIME": 109.00000000000502,
+            "BOTTLENECK_TIME": 88.26747185608583
+        },
+        {
+            "STATION": 6,
+            "PERIOD": "Day",
+            "PRODUCTION": 30,
+            "REJECTED": 2,
+            "OCCUPANCY": 120.06668034700559,
+            "DOWNTIME": 354.9000000000283,
+            "FIX_TIME": 17.466465859267203,
+            "WAITING_TIME": 354.9000000000283,
+            "BOTTLENECK_TIME": 0.0
+        }
+    ]
+}

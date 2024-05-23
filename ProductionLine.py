@@ -38,7 +38,7 @@ class Item:
         self.stages_passed = [0]
         self.stages_left = [1, 2, 3, 4, 5, 6]
         self.name = str(itemNo)
-        self.current_stage = 0
+        self.current_stage = 1
     def process(self, workstation_id : int) -> None:
         if workstation_id in self.stages_left:
             self.stages_left.remove(workstation_id)
@@ -106,6 +106,7 @@ class WorkStation:
                 continue
                 
             if self.item:
+                self.item.current_stage = self.id
                 if abs(random.normalvariate()) <= self.fail_rate:
                     self.status = False
                     # print(f"Station {self.id} Failure")
@@ -121,7 +122,6 @@ class WorkStation:
                     yield self.env.timeout(abs(random.normalvariate(4)))
                     self.item.process(self.id)
                     self.raw_materials = self.raw_materials - 1
-                    self.item.current_stage = self.id
                     #print(f"Station {self.id} made item at {self.env.now:.4f} named {self.item.name}")
                     self.finished_items += 1
                     # Probability of product getting rejected
