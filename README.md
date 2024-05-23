@@ -1,6 +1,6 @@
 # Factory Simulation D3 Visualization
 
-By Miguel Angel Tovar, Andres Martinez and Carlos Velez
+By Miguel Angel Tovar, Andres Martinez, Carlos Velez, Mario Rodríguez and Francisco Díaz de León
 
 ---
 
